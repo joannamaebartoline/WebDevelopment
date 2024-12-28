@@ -43,7 +43,7 @@ const Products = () => {
             </nav>
 
             <div className="container">
-                <h1>My Products</h1>
+                <h1>Products</h1>
                 <div className="products">
                     {products.map((product) => (
                         <div className="product" key={product.productID}>
