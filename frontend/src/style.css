@@ -396,5 +396,6 @@ nav ul li a:hover {
 
 /* Additional Padding for Content */
 .container {
-    margin-top: 60px; /* Adjust based on navbar height */
+    margin-top: 80px; /* Adjust based on navbar height */
 }
+

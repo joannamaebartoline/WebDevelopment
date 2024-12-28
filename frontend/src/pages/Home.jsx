@@ -95,6 +95,10 @@ const Home = () => {
                             <button onClick={() => handleViewDetails(product)}>
                                 View Details
                             </button>
+                             {/* Add to Cart Button */}
+                             <button onClick={() => handleAddToCart(product, 1)}> {/* Default quantity set to 1 */}
+                                Add to Cart
+                            </button>
                         </div>
                     ))}
                 </div>

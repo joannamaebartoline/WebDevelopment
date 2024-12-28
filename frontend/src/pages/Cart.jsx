@@ -62,6 +62,17 @@ const Cart = () => {
         navigate("/home"); // Redirect to the home or product page
     };
 
+    const handleCheckout = () => {
+        // Collect the selected items and total
+        const checkoutItems = cartItems.filter((item) =>
+            selectedItems.includes(item.productID)
+        );
+        const totalAmount = calculateTotal();
+
+        // Redirect to the checkout page with the selected items and total amount
+        navigate("/checkout", { state: { checkoutItems, totalAmount } });
+    };
+
     return (
         <div>
             {/* Render Navbar */}
@@ -143,11 +154,7 @@ const Cart = () => {
                             <button
                                 className="checkout-button"
                                 disabled={selectedItems.length === 0}
-                                onClick={() =>
-                                    alert(
-                                        `Checking out items: ${selectedItems.join(", ")}`
-                                    )
-                                }
+                                onClick={handleCheckout}
                             >
                                 Checkout
                             </button>

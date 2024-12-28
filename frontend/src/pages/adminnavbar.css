@@ -1,0 +1,58 @@
+/* Navbar Styles */
+nav {
+    background-color: #333; /* Dark background for navbar */
+    color: white;
+    padding: 10px 20px;
+    display: flex;
+    justify-content: flex-start; /* Align items to the left */
+    align-items: center; /* Vertically center the items */
+    position: fixed;
+    top: 0;
+    width: 100%;
+    z-index: 1000;
+}
+
+/* Navbar List */
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex; /* Align list items horizontally */
+    align-items: center; /* Align items vertically in the center */
+}
+
+nav li {
+    margin-right: 20px; /* Space between items */
+}
+
+/* Account Icon Styles */
+.account-icon img {
+    width: 24px; /* Set size of the account icon */
+    height: 24px;
+    border-radius: 50%; /* Make it circular */
+    cursor: pointer;
+    transition: transform 0.3s; /* Add smooth hover effect */
+    vertical-align: middle; /* Align image vertically with text */
+}
+
+/* Hover effect for account icon */
+.account-icon img:hover {
+    transform: scale(1.1); /* Slight zoom effect on hover */
+}
+
+/* Link Styles */
+nav li a {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    padding: 10px 15px;
+    transition: color 0.3s, background-color 0.3s;
+    border-radius: 5px; /* Rounded corners for links */
+    display: flex;
+    align-items: center; /* Vertically align the text */
+}
+
+nav li a:hover {
+    color: #4CAF50; /* Change text color on hover */
+    background-color: #555; /* Background change on hover */
+}

@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
+import AdminNavbar from "./AdminNavbar"; // Import the Navbar
 
 const Products = () => {
     const [products, setProducts] = useState([]);
@@ -19,13 +20,11 @@ const Products = () => {
     }, []);
 
     const handleDelete = async (id) => {
-        // Ask for confirmation before deleting the product
         const confirmDelete = window.confirm("Are you sure you want to delete this product?");
-        
         if (confirmDelete) {
             try {
                 await axios.delete(`http://localhost:8800/products/${id}`);
-                fetchAllProducts();  // Re-fetch the products after deletion
+                fetchAllProducts();
             } catch (err) {
                 console.log("Error deleting product:", err);
             }
@@ -34,14 +33,7 @@ const Products = () => {
 
     return (
         <div>
-            {/* Navbar with links to Orders and Payments */}
-            <nav>
-                <ul>
-                    <li><Link to="/all-orders">All Orders</Link></li>
-                    <li><Link to="/all-payments">All Payments</Link></li>
-                </ul>
-            </nav>
-
+            <AdminNavbar /> {/* Use the Navbar here */}
             <div className="container">
                 <h1>Products</h1>
                 <div className="products">
