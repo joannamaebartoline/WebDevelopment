@@ -1,0 +1,189 @@
+/* General container for the entire cart page */
+.cart-container {
+    padding: 20px;
+    max-width: 1200px;
+    margin: 20px auto;
+    background-color: #ffffff;
+    border-radius: 10px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    font-family: "Arial", sans-serif;
+}
+
+/* Cart title styling */
+.cart-title {
+    font-size: 36px;
+    font-weight: bold;
+    color: #333333;
+    margin-bottom: 25px;
+    text-align: center;
+}
+
+/* Cart table styling */
+.cart-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 15px;
+}
+
+.cart-table th,
+.cart-table td {
+    padding: 15px;
+    text-align: left;
+    border-bottom: 1px solid #eaeaea;
+    vertical-align: middle;
+}
+
+.cart-table th {
+    background-color: #f8f8f8;
+    font-size: 16px;
+    font-weight: 600;
+    text-transform: uppercase;
+    color: #555555;
+}
+
+.cart-table td {
+    font-size: 15px;
+    color: #444444;
+}
+
+.cart-table img {
+    width: 70px;
+    height: 70px;
+    object-fit: cover;
+    border-radius: 8px;
+}
+
+/* Quantity input styling */
+.quantity-input {
+    width: 60px;
+    text-align: center;
+    border: 1px solid #cccccc;
+    border-radius: 5px;
+    padding: 5px;
+    font-size: 14px;
+    color: #555555;
+}
+
+/* Remove button styling */
+.remove-button {
+    padding: 8px 12px;
+    background-color: #ff6b6b;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 13px;
+    font-weight: 500;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+}
+
+.remove-button:hover {
+    background-color: #e74c3c;
+    transform: scale(1.05);
+}
+
+/* Checkout button styling */
+.checkout-button {
+    width: 100%;
+    padding: 15px;
+    margin-top: 25px;
+    background-color: #3498db;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 18px;
+    font-weight: bold;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
+.checkout-button:disabled {
+    background-color: #cccccc;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+.checkout-button:hover:not(:disabled) {
+    background-color: #2980b9;
+    transform: scale(1.05);
+}
+
+/* Select all checkbox styling */
+.cart-container label {
+    display: inline-block;
+    margin-bottom: 15px;
+    font-size: 15px;
+    font-weight: 500;
+    color: #333333;
+    cursor: pointer;
+}
+
+.cart-container input[type="checkbox"] {
+    margin-right: 8px;
+    transform: scale(1.2);
+    cursor: pointer;
+}
+
+/* Empty cart message */
+.empty-cart-message {
+    text-align: center;
+    font-size: 18px;
+    color: #777777;
+    margin-top: 40px;
+}
+
+/* Responsive adjustments */
+@media (max-width: 768px) {
+    .cart-table th,
+    .cart-table td {
+        font-size: 14px;
+        padding: 10px;
+    }
+
+    .cart-title {
+        font-size: 28px;
+    }
+
+    .checkout-button {
+        font-size: 16px;
+    }
+}
+
+@media (max-width: 480px) {
+    .cart-table img {
+        width: 50px;
+        height: 50px;
+    }
+
+    .cart-title {
+        font-size: 24px;
+    }
+
+    .quantity-input {
+        width: 50px;
+    }
+
+    .checkout-button {
+        padding: 12px;
+    }
+}
+
+.empty-cart-message {
+    text-align: center;
+    margin-top: 50px;
+}
+
+.shop-now-button {
+    background-color: #ffcc00;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    cursor: pointer;
+    font-size: 16px;
+    margin-top: 20px;
+}
+
+.shop-now-button:hover {
+    background-color: #ffb900;
+}

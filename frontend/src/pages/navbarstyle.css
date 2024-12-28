@@ -1,0 +1,255 @@
+/* Navbar Styling */
+.navbar {
+    background-color: #333;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+}
+
+/* Navbar container to hold all navbar items */
+.navbar-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Styling for individual navbar links (Home, Products, Cart, Account) */
+.nav-link {
+    color: white;
+    text-decoration: none;
+    font-size: 16px;
+    margin-right: 20px;
+    padding: 10px 15px;
+}
+
+/* Hover effect for navbar links */
+.nav-link:hover {
+    text-decoration: underline;
+}
+
+/* Products dropdown */
+.products-dropdown {
+    position: relative;
+}
+
+.dropdown-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    padding: 10px 15px;
+}
+
+/* Dropdown menu container */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    top: 35px;
+    left: 0;
+    width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+/* Individual items in the dropdown */
+.dropdown-item {
+    display: block;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+/* Hover effect for dropdown items */
+.dropdown-item:hover {
+    background-color: #555;
+}
+
+/* Show the dropdown when hovering over the Products link */
+.products-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Styling for the cart and account icons */
+.cart-icon, .account-icon {
+    width: 30px;
+    height: auto;
+    margin-left: 10px;
+    cursor: pointer;
+    filter: brightness(0) invert(1);
+}
+
+/* Search Bar Styling */
+input[type="text"] {
+    padding: 5px 10px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+
+/* Products dropdown */
+.products-dropdown {
+    position: relative;
+}
+
+/* Dropdown menu container */
+.dropdown-menu {
+    display: none;
+    position: absolute;
+    background-color: #333;
+    top: 35px;
+    left: 0;
+    width: 200px;
+    border-radius: 5px;
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.3);
+    z-index: 10;
+}
+
+/* Show the dropdown when hovering over the Products link or the entire .products-dropdown container */
+.products-dropdown:hover .dropdown-menu {
+    display: block;
+}
+
+/* Individual items in the dropdown */
+.dropdown-item {
+    display: block;
+    padding: 10px;
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    transition: background-color 0.3s;
+}
+
+/* Hover effect for dropdown items */
+.dropdown-item:hover {
+    background-color: #555;
+}
+
+
+/* Hover effect for dropdown items */
+.dropdown-item:hover {
+    background-color: #555;
+}
+
+/* Styling for the logo in the navbar */
+.navbar-logo {
+    font-size: 24px;
+    font-weight: bold;
+}
+
+/* Styling for the logo link */
+.navbar-logo a {
+    text-decoration: none;
+    color: white;
+}
+
+/* Navbar links container */
+.navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+/* Individual navbar link items */
+.navbar-links li a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+/* Hover effect for navbar link items */
+.navbar-links li a:hover {
+    color: #f0f0f0;
+}
+
+/* Flexbox for navbar items */
+.navbar-container {
+    display: flex;
+    align-items: center;
+    width: 100%;
+}
+
+/* Hero Section */
+.hero-section {
+    position: relative;
+    width: 100%;
+    height: 800px; /* Increased height for a larger hero section */
+    background-image: url('../assets/cosmetics2.jpg'); /* Ensure the correct path */
+    background-size: cover; /* Ensures the image covers the section */
+    background-position: center; /* Keeps the image centered */
+    background-repeat: no-repeat; /* Prevents the image from repeating */
+}
+
+
+.hero-overlay {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2); /* Lighter overlay */
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    color: white;
+    padding: 0 20px;
+}
+
+.hero-overlay h1 {
+    font-size: 36px;
+    margin-bottom: 10px;
+    font-weight: bold;
+}
+
+.hero-overlay p {
+    font-size: 18px;
+    margin-bottom: 20px;
+}
+
+.hero-overlay button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #ff4500;
+    color: white;
+    border: none;
+    cursor: pointer;
+    border-radius: 5px;
+}
+
+.hero-overlay button:hover {
+    background-color: #e84300;
+}
+
+.product-rating {
+    margin-top: 10px;
+    font-size: 14px;
+}
+
+.product-rating .stars {
+    display: inline-block;
+    margin-top: 5px;
+}
+
+.product-rating .stars span {
+    font-size: 18px;
+    color: #ccc;
+}
+
+.product-rating .stars .filled {
+    color: #ffcc00; /* Yellow color for filled stars */
+}
+
+.product-rating .stars .empty {
+    color: #ddd; /* Light grey for empty stars */
+}
