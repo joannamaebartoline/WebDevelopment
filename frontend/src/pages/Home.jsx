@@ -8,6 +8,8 @@ const Home = () => {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null); // Track the selected product
     const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
+    
+   
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -50,6 +52,7 @@ const Home = () => {
         alert("Product added to cart!");
     };
 
+
     return (
         <>
             <Navbar />
@@ -65,6 +68,29 @@ const Home = () => {
 
             <div className="home-page">
                 <h1>Our Products</h1>
+                <div className="home-content">
+                    {/* Sidebar for Categories */}
+                    <div className="sidebar">
+                        <h2>Categories</h2>
+                        <ul>
+                            <li><a href="/category/face">Face Products</a></li>
+                            <li><a href="/category/eye">Eye Products</a></li>
+                            <li><a href="/category/lip">Lip Products</a></li>
+                            <li><a href="/category/nail">Nail Products</a></li>
+                            <li><a href="/category/skincare">Skincare Essentials</a></li>
+                            <li><a href="/category/tools">Tools and Accessories</a></li>
+                            <li><a href="/category/body">Body Products</a></li>
+                            <li><a href="/category/hair">Hair Cosmetics</a></li>
+                            <li><a href="/category/fragrances">Fragrances</a></li>
+                        </ul>
+                        <h3>Sort by Price</h3>
+                        <select className="dropdown-select">
+                            <option value="">Select an option</option>
+                            <option value="lowToHigh">Low to High</option>
+                            <option value="highToLow">High to Low</option>
+                        </select>
+                    </div>
+
                 <div className="product-cards">
                     {products.map((product) => (
                         <div className="product-card" key={product.productID}>
@@ -103,12 +129,13 @@ const Home = () => {
                     ))}
                 </div>
             </div>
+            </div>
 
             {/* Modal for displaying product details */}
             <ProductModal
                 product={selectedProduct}
                 isOpen={isModalOpen}
-                onClose={handleCloseModal}
+                onClose={handleCloseModal} 
                 onAddToCart={handleAddToCart}
             />
         </>

@@ -9,6 +9,8 @@ import OrderConfirmation from "./pages/OrderConfirmation";
 import ProductModal from "./pages/ProductModal";
 import AllOrders from "./pages/AllOrders";  // Add this import
 import AllPayments from "./pages/AllPayments";  // Add this import
+import Login from "./pages/Login";
+import Signup from "./pages/Signup";
 import './style.css';
 
 const App = () => {
@@ -25,6 +27,8 @@ const App = () => {
                 <Route path="/product-modal" element={<ProductModal />} />
                 <Route path="/all-orders" element={<AllOrders />} />  {/* Route for All Orders */}
                 <Route path="/all-payments" element={<AllPayments />} />  {/* Route for All Payments */}
+                <Route path="/login" element={<Login />} />
+                <Route path="/signup" element={<Signup />} />
             </Routes>
         </BrowserRouter>
     );

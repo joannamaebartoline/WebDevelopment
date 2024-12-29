@@ -6,6 +6,11 @@
     align-items: center;
     justify-content: space-between;
     color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 1000;
 }
 
 /* Navbar container to hold all navbar items */
@@ -183,7 +188,7 @@ input[type="text"] {
     position: relative;
     width: 100%;
     height: 800px; /* Increased height for a larger hero section */
-    background-image: url('../assets/cosmetics2.jpg'); /* Ensure the correct path */
+    background-image: url('../assets/cosmetics3.png'); /* Ensure the correct path */
     background-size: cover; /* Ensures the image covers the section */
     background-position: center; /* Keeps the image centered */
     background-repeat: no-repeat; /* Prevents the image from repeating */
@@ -210,6 +215,7 @@ input[type="text"] {
     font-size: 36px;
     margin-bottom: 10px;
     font-weight: bold;
+    color: #fff;
 }
 
 .hero-overlay p {
@@ -252,4 +258,175 @@ input[type="text"] {
 
 .product-rating .stars .empty {
     color: #ddd; /* Light grey for empty stars */
+}
+
+.account-icon {
+    width: 32px; /* Set the appropriate size */
+    height: 32px;
+    object-fit: cover;
+    cursor: pointer;
+    margin-right: 30px; /* Adjust the margin as needed */
+}
+
+.account-dropdown {
+    position: relative; /* To position the dropdown menu properly */
+}
+
+.dropdown-menu {
+    display: none; /* Initially hide the menu */
+    position: absolute;
+    right: 0;
+    top: 40px; /* Adjust to position the menu below the icon */
+    background: white;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    z-index: 1000;
+    min-width: 150px;
+    padding: 10px;
+}
+
+.dropdown-menu.show {
+    display: block; /* Show the menu when the class `show` is added */
+}
+
+.dropdown-item {
+    padding: 8px 12px;
+    cursor: pointer;
+    color: black;
+    text-decoration: none;
+}
+
+.dropdown-item:hover {
+    background-color: #f0f0f0;
+}
+/* Home Page Layout */
+.home-page {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 40px;
+    width: 100%;
+}
+
+.home-content {
+    display: flex;
+    gap: 20px;
+    width: 100%;
+}
+
+/* Sidebar for Categories */
+.sidebar {
+    width:10%;
+    background-color: #f4f4f4;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    top: 20px;
+    height: fit-content;
+}
+
+.sidebar h2 {
+    margin-bottom: 15px;
+}
+
+.sidebar ul {
+    list-style: none;
+    padding: 0;
+}
+
+.sidebar ul li {
+    margin: 10px 0;
+}
+
+.sidebar ul li a {
+    text-decoration: none;
+    color: #333;
+    font-size: 16px;
+    transition: color 0.3s;
+}
+
+.sidebar ul li a:hover {
+    color: #4CAF50;
+}
+
+/* Product Cards */
+.product-cards {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    width: 80%;
+}
+
+.product-card {
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    padding: 15px;
+    text-align: center;
+    width: 250px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: transform 0.3s, box-shadow 0.3s;
+}
+
+.product-card:hover {
+    transform: translateY(-5px);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.2);
+}
+
+.product-card img {
+    max-width: 100%;
+    border-radius: 5px;
+    height: 180px;
+    object-fit: cover;
+    margin-bottom: 10px;
+}
+
+.product-card h2 {
+    font-size: 18px;
+    margin: 10px 0;
+}
+
+.product-card p {
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 10px;
+}
+
+.product-card span {
+    font-size: 16px;
+    color: #555;
+    margin-bottom: 5px;
+}
+
+/* Navbar Styling */
+.navbar {
+    background-color: #333;
+    padding: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    color: white;
+}
+
+/* Navbar links container */
+.navbar-links {
+    list-style: none;
+    display: flex;
+    gap: 15px;
+    margin: 0;
+    padding: 0;
+}
+
+.navbar-links li a {
+    text-decoration: none;
+    color: white;
+    font-size: 16px;
+    transition: color 0.3s ease;
+}
+
+.navbar-links li a:hover {
+    color: #f0f0f0;
 }

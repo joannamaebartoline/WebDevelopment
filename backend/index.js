@@ -44,6 +44,72 @@ app.post('/upload', upload.single('file'), (req, res) => {
     res.status(200).json({ filePath: `/uploads/${file.filename}` });
 });
 
+// User Signup
+app.post('/signup', async (req, res) => {
+    const { name, email, password, role = 'user' } = req.body;
+    // Basic validation
+    if (!name || !email || !password) {
+        return res.status(400).json("All fields are required.");
+    }
+
+    // Check if the email already exists
+    db.query("SELECT * FROM users WHERE email = ?", [email], async (err, result) => {
+        if (err) return res.status(500).json("Error checking email.");
+
+        if (result.length > 0) {
+            return res.status(400).json("Email already exists.");
+        }
+
+        // Hash the password
+        const hashedPassword = await bcrypt.hash(password, 10);
+
+        // Insert user into the database
+        const q = "INSERT INTO users (`username`, `email`, `password`, `role`) VALUES (?)";
+        const values = [name, email, hashedPassword, role];
+
+        db.query(q, [values], (err) => {
+            if (err) {
+                console.log("Error inserting user:", err);
+                return res.status(500).json("Error saving user.");
+            }
+            res.status(201).json("User has been created successfully.");
+        });
+    });
+});
+
+// User Login
+app.post('/login', (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json("Email and password are required.");
+    }
+
+    // Check if the user exists in the database
+    db.query("SELECT * FROM users WHERE email = ?", [email], async (err, result) => {
+        if (err) return res.status(500).json("Error fetching user.");
+        if (result.length === 0) return res.status(400).json("User not found.");
+
+        const user = result[0];
+
+        // Compare the entered password with the hashed password in the database
+        const isPasswordCorrect = await bcrypt.compare(password, user.password);
+        if (!isPasswordCorrect) {
+            return res.status(400).json("Invalid credentials.");
+        }
+
+        // Create JWT token
+        const token = jwt.sign({ userId: user.id, role: user.role }, 'your-secret-key', { expiresIn: '1h' });
+
+        res.status(200).json({
+            message: "Login successful",
+            token,
+            user: { id: user.id, name: user.name, email: user.email, role: user.role }
+        });
+    });
+});
+
+
 // Add product
 app.post("/products", (req, res) => {
     const { title, description, price, images, category } = req.body;
