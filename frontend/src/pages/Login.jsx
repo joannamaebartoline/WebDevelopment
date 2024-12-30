@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import './auth.css';
 
 const Login = () => {
     const [formData, setFormData] = useState({ email: "", password: "" });
@@ -13,15 +14,15 @@ const Login = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            const res = await axios.post("http://localhost:8800/auth/login", formData);
+            const res = await axios.post("http://localhost:8800/login", formData);
             localStorage.setItem("user", JSON.stringify(res.data)); // Save user data
-            alert("Login successful!");
-            navigate("/home"); // Redirect to home page
+            navigate("/customer"); // Navigate to user dashboard
         } catch (err) {
             console.error("Error during login:", err);
             alert("Login failed. Please check your credentials.");
         }
     };
+    
 
     return (
         <div className="auth-form">

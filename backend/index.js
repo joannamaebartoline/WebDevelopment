@@ -3,6 +3,10 @@ import mysql from 'mysql';
 import cors from 'cors';
 import multer from 'multer';
 import path from 'path';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+
+
 
 const app = express();
 
@@ -44,16 +48,19 @@ app.post('/upload', upload.single('file'), (req, res) => {
     res.status(200).json({ filePath: `/uploads/${file.filename}` });
 });
 
+
+
 // User Signup
 app.post('/signup', async (req, res) => {
-    const { name, email, password, role = 'user' } = req.body;
+    const { username, email, password } = req.body;
+
     // Basic validation
-    if (!name || !email || !password) {
+    if (!username || !email || !password) {
         return res.status(400).json("All fields are required.");
     }
 
     // Check if the email already exists
-    db.query("SELECT * FROM users WHERE email = ?", [email], async (err, result) => {
+    db.query("SELECT * FROM customers WHERE email = ?", [email], async (err, result) => {
         if (err) return res.status(500).json("Error checking email.");
 
         if (result.length > 0) {
@@ -64,8 +71,8 @@ app.post('/signup', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Insert user into the database
-        const q = "INSERT INTO users (`username`, `email`, `password`, `role`) VALUES (?)";
-        const values = [name, email, hashedPassword, role];
+        const q = "INSERT INTO customers (`username`, `email`, `password`) VALUES (?)";
+        const values = [username, email, hashedPassword];
 
         db.query(q, [values], (err) => {
             if (err) {
@@ -86,7 +93,7 @@ app.post('/login', (req, res) => {
     }
 
     // Check if the user exists in the database
-    db.query("SELECT * FROM users WHERE email = ?", [email], async (err, result) => {
+    db.query("SELECT * FROM customers WHERE email = ?", [email], async (err, result) => {
         if (err) return res.status(500).json("Error fetching user.");
         if (result.length === 0) return res.status(400).json("User not found.");
 
@@ -99,12 +106,38 @@ app.post('/login', (req, res) => {
         }
 
         // Create JWT token
-        const token = jwt.sign({ userId: user.id, role: user.role }, 'your-secret-key', { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user.userID }, 'your-secret-key', { expiresIn: '1h' });
 
         res.status(200).json({
             message: "Login successful",
             token,
-            user: { id: user.id, name: user.name, email: user.email, role: user.role }
+            user: { id: user.userID, username: user.username, email: user.email }
+        });
+    });
+});
+
+// Admin Login
+app.post('/adminlogin', (req, res) => {
+    const { email, password } = req.body;
+
+    if (!email || !password) {
+        return res.status(400).json("Email and password are required.");
+    }
+
+    // Check if the user exists in the database
+    db.query("SELECT * FROM admin WHERE email = ?", [email], async (err, result) => {
+        if (err) return res.status(500).json("Error fetching user.");
+        if (result.length === 0) return res.status(400).json("User not found.");
+
+        const user = result[0];
+
+        if (password !== user.password) {
+            return res.status(400).json("Invalid credentials.");
+        }
+
+        res.status(200).json({
+            message: "Login successful",
+            user: { id: user.adminID, username: user.username, email: user.email }
         });
     });
 });

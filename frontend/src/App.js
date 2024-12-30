@@ -11,16 +11,17 @@ import AllOrders from "./pages/AllOrders";  // Add this import
 import AllPayments from "./pages/AllPayments";  // Add this import
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
+import AdminLogin from "./pages/AdminLogin";
 import './style.css';
 
 const App = () => {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/" element={<Products />} />
+                <Route path="/admin" element={<Products />} />
                 <Route path="/add" element={<Add />} />
                 <Route path="/update/:id" element={<Update />} />
-                <Route path="/home" element={<Home />} />
+                <Route path="/customer" element={<Home />} />
                 <Route path="/cart" element={<Cart />} />
                 <Route path="/checkout" element={<Checkout />} />
                 <Route path="/order-confirmation" element={<OrderConfirmation />} />
@@ -29,6 +30,7 @@ const App = () => {
                 <Route path="/all-payments" element={<AllPayments />} />  {/* Route for All Payments */}
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
+                <Route path="/adminlogin" element={<AdminLogin />} />
             </Routes>
         </BrowserRouter>
     );

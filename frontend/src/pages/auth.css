@@ -1,0 +1,65 @@
+/* General Styling for both Forms */
+.auth-form {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    max-width: 400px;
+    width: 100%;
+    margin: auto;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease;
+}
+
+.auth-form h1 {
+    margin-bottom: 20px;
+    font-size: 24px;
+    color: #333;
+}
+
+.auth-form form {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+}
+
+.auth-form input {
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    font-size: 16px;
+    width: 100%;
+}
+
+.auth-form input:focus {
+    border-color: #4CAF50; /* Highlight border when focused */
+    outline: none;
+}
+
+.auth-form button {
+    padding: 12px;
+    font-size: 16px;
+    background-color: #4CAF50; /* Green color */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.auth-form button:hover {
+    background-color: #45a049; /* Darker green on hover */
+}
+
+/* Responsive Styles */
+@media (max-width: 600px) {
+    .auth-form {
+        padding: 15px;
+        max-width: 350px;
+    }
+}
+

@@ -20,7 +20,7 @@ const Navbar = ({ onSearch }) => {
         localStorage.removeItem("user"); // Clear user data from localStorage
         setUser(null); // Reset the user state
         alert("Logged out successfully!");
-        navigate("/home"); // Redirect to home page
+        navigate("/customer"); // Redirect to home page
     };
     
     const handleSearchChange = (e) => {
@@ -37,7 +37,7 @@ const Navbar = ({ onSearch }) => {
     return (
         <nav className="navbar">
             <div className="navbar-container">
-                <Link to="/home" className="nav-link">Home</Link>
+                <Link to="/customer" className="nav-link">Home</Link>
 
                 {/* Search Bar */}
                 <input

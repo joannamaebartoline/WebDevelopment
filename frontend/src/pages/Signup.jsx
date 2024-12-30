@@ -1,6 +1,7 @@
 import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import './auth.css';
 
 const Signup = () => {
     const [formData, setFormData] = useState({
@@ -17,15 +18,15 @@ const Signup = () => {
     const handleSubmit = async (e) => {
         e.preventDefault();
         try {
-            await axios.post("http://localhost:8800/auth/signup", formData);
+            await axios.post("http://localhost:8800/signup", formData);
             alert("Signup successful! Please login.");
             navigate("/login"); // Redirect to login page
         } catch (err) {
-            console.error("Error during signup:", err);
+            console.error("Error during signup:", err.response ? err.response.data : err.message);
             alert("Signup failed. Please try again.");
         }
     };
-
+    
     return (
         <div className="auth-form">
             <h1>Sign Up</h1>

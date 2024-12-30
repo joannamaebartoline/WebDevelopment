@@ -1,36 +1,55 @@
-import React from "react";
+import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import accountIcon from "../assets/account-icon.png";
 import "./adminnavbar.css"; // Import the CSS file for Navbar styling
 
 
 const AdminNavbar = () => {
+    const [user, setUser] = useState(null);
+    const [dropdownVisible, setDropdownVisible] = useState(false);
+
+    useEffect(() => {
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        if (storedUser) {
+            setUser(storedUser);
+        }
+    }, []);
+
+    const handleLogout = () => {
+        localStorage.removeItem("user"); // Clear user data from localStorage
+        setUser(null); // Reset user state
+        alert("Logged out successfully!");
+    };
+
+    const toggleDropdown = () => {
+        setDropdownVisible(!dropdownVisible); // Toggle the dropdown visibility
+    };
+
     return (
         <nav>
             <ul>
-                
-               <li>
-                    <Link to="/account" className="account-icon">
-                    <img src={accountIcon} alt="Account" />
-                    </Link>
+                <li className="account-dropdown">
+                    <img
+                        src={accountIcon}
+                        alt="Account"
+                        className="account-icon"
+                        onClick={toggleDropdown} // Toggle dropdown on icon click
+                    />
+                    <div className={`dropdown-menu ${dropdownVisible ? "show" : ""}`}>
+                        {user ? (
+                            <>
+                                <p>Welcome, {user.username}</p>
+                                <button onClick={handleLogout}>Logout</button>
+                            </>
+                        ) : (
+                            <>
+                                <Link to="/adminlogin" className="dropdown-item">Login</Link>
+                            </>
+                        )}
+                    </div>
                 </li>
                 <li><Link to="/all-orders">All Orders</Link></li>
                 <li><Link to="/all-payments">All Payments</Link></li>
-
-                <li className="dropdown">
-                    <Link to="#" className="dropdown-toggle">Categories</Link>
-                    <div className="dropdown-menu">
-                        <Link to="/category/face" className="dropdown-item">Face Products</Link>
-                        <Link to="/category/eye" className="dropdown-item">Eye Products</Link>
-                        <Link to="/category/lip" className="dropdown-item">Lip Products</Link>
-                        <Link to="/category/nail" className="dropdown-item">Nail Products</Link>
-                        <Link to="/category/skincare" className="dropdown-item">Skincare Essentials</Link>
-                        <Link to="/category/tools" className="dropdown-item">Tools and Accessories</Link>
-                        <Link to="/category/body" className="dropdown-item">Body Products</Link>
-                        <Link to="/category/hair" className="dropdown-item">Hair Cosmetics</Link>
-                        <Link to="/category/fragrances" className="dropdown-item">Fragrances</Link>
-                    </div>
-                </li>
             </ul>
         </nav>
     );

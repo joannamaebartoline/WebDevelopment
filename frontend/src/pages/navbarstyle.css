@@ -186,12 +186,13 @@ input[type="text"] {
 /* Hero Section */
 .hero-section {
     position: relative;
-    width: 100%;
-    height: 800px; /* Increased height for a larger hero section */
+    width: 105%;
+    height: 100vh; /* Increased height for a larger hero section */
     background-image: url('../assets/cosmetics3.png'); /* Ensure the correct path */
     background-size: cover; /* Ensures the image covers the section */
     background-position: center; /* Keeps the image centered */
-    background-repeat: no-repeat; /* Prevents the image from repeating */
+   
+    overflow: hidden; 
 }
 
 
@@ -305,7 +306,7 @@ input[type="text"] {
     display: flex;
     flex-direction: column;
     gap: 20px;
-    margin-top: 40px;
+    margin-top: 20px;
     width: 100%;
 }
 
