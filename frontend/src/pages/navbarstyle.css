@@ -287,8 +287,21 @@ input[type="text"] {
     padding: 10px;
 }
 
+.navbar .username{
+    margin-right: 20px;
+    font-weight: bold;
+    color: #fff;
+    font-size: 16px;
+}
+
 .dropdown-menu.show {
     display: block; /* Show the menu when the class `show` is added */
+    
+}
+.account-section {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
 }
 
 .dropdown-item {

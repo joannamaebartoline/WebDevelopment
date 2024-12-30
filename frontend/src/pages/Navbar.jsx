@@ -11,6 +11,7 @@ const Navbar = ({ onSearch }) => {
 
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
+        console.log("Stored user from localStorage:", storedUser);
         if (storedUser) {
             setUser(storedUser);
         }
@@ -36,27 +37,36 @@ const Navbar = ({ onSearch }) => {
 
     return (
         <nav className="navbar">
-            <div className="navbar-container">
-                <Link to="/customer" className="nav-link">Home</Link>
+        <div className="navbar-container">
+            <Link to="/customer" className="nav-link">Home</Link>
 
-                {/* Search Bar */}
-                <input
-                    type="text"
-                    placeholder="Search products..."
-                    onChange={handleSearchChange}
-                    style={{
-                        padding: "5px 10px",
-                        
-                        border: "1px solid #ccc",
-                        borderRadius: "5px",
-                        width: "1000px",
-                    }}
-                />
+            {/* Search Bar */}
+            <input
+                type="text"
+                placeholder="Search products..."
+                onChange={handleSearchChange}
+                style={{
+                    padding: "5px 10px",
+                    border: "1px solid #ccc",
+                    borderRadius: "5px",
+                    width: "1000px",
+                }}
+            />
 
-                <Link to="/cart" className="nav-link">
-                    <img src={cartIcon} alt="Cart" className="cart-icon" />
-                </Link>
+            <Link to="/cart" className="nav-link">
+                <img src={cartIcon} alt="Cart" className="cart-icon" />
+            </Link>
 
+            <div className="account-section">
+                {/* Display Welcome message if user is logged in */}
+                {user ? (
+                    <p className= "username">Welcome, {user.username}</p>
+                ) : (
+                    <>
+                        <Link to="/login" className="nav-link">Login</Link>
+                        <Link to="/signup" className="nav-link">Sign Up</Link>
+                    </>
+                )}
                 <div className="account-dropdown">
                     <img
                         src={accountIcon}
@@ -65,21 +75,12 @@ const Navbar = ({ onSearch }) => {
                         onClick={toggleDropdown}
                     />
                     <div className={`dropdown-menu ${dropdownVisible ? "show" : ""}`}>
-                        {user ? (
-                            <>
-                                <p>Welcome, {user.username}</p>
-                                <button onClick={handleLogout} className="dropdown-item">Logout</button>
-                            </>
-                        ) : (
-                            <>
-                                <Link to="/login" className="dropdown-item">Login</Link>
-                                <Link to="/signup" className="dropdown-item">Sign Up</Link>
-                            </>
-                        )}
+                        {user && <button onClick={handleLogout} className="dropdown-item">Logout</button>}
                     </div>
                 </div>
             </div>
-        </nav>
+        </div>
+    </nav>
     );
 };
 

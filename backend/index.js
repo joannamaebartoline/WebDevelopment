@@ -52,10 +52,10 @@ app.post('/upload', upload.single('file'), (req, res) => {
 
 // User Signup
 app.post('/signup', async (req, res) => {
-    const { username, email, password } = req.body;
+    const { username, email, password, phone_number } = req.body;
 
     // Basic validation
-    if (!username || !email || !password) {
+    if (!username || !email || !password || !phone_number) {
         return res.status(400).json("All fields are required.");
     }
 
@@ -71,10 +71,10 @@ app.post('/signup', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Insert user into the database
-        const q = "INSERT INTO customers (`username`, `email`, `password`) VALUES (?)";
-        const values = [username, email, hashedPassword];
+        const q = "INSERT INTO customers (`username`, `email`, `password`, `phone_number`) VALUES (?)";
+        const values = [username, email, hashedPassword, phone_number];
 
-        db.query(q, [values], (err) => {
+        db.query(q, [values], (err) => { 
             if (err) {
                 console.log("Error inserting user:", err);
                 return res.status(500).json("Error saving user.");
@@ -138,6 +138,73 @@ app.post('/adminlogin', (req, res) => {
         res.status(200).json({
             message: "Login successful",
             user: { id: user.adminID, username: user.username, email: user.email }
+        });
+    });
+});
+
+app.post('/place-order', (req, res) => {
+    const { userID, address, paymentMethod, totalAmount, items } = req.body;
+
+    if (!userID || !address || !paymentMethod || !totalAmount || !items || items.length === 0) {
+        return res.status(400).json("All fields are required.");
+    }
+
+    const orderQuery = "INSERT INTO orders (userID, address, paymentMethod, totalAmount) VALUES (?, ?, ?, ?)";
+    const orderValues = [userID, address, paymentMethod, totalAmount];
+
+    db.query(orderQuery, orderValues, (err, result) => {
+        if (err) {
+            console.error("Error inserting order:", err);
+            return res.status(500).json("Failed to place order.");
+        }
+
+        const orderID = result.insertId;
+
+        const itemQuery = "INSERT INTO order_items (orderID, productID, quantity, price) VALUES ?";
+        const itemValues = items.map(item => [orderID, item.productID, item.quantity, item.price]);
+
+        db.query(itemQuery, [itemValues], (err) => {
+            if (err) {
+                console.error("Error inserting order items:", err);
+                return res.status(500).json("Failed to save order items.");
+            }
+
+            res.status(201).json({ message: "Order placed successfully!", orderID });
+        });
+    });
+});
+ 
+
+app.post('/orders', (req, res) => {
+    const { userID, address, paymentMethod, totalAmount, items } = req.body;
+
+    if (!userID || !address || !paymentMethod || !totalAmount || !items || items.length === 0) {
+        return res.status(400).json("All fields are required.");
+    }
+
+    // Insert the order into the `orders` table
+    const orderQuery = "INSERT INTO orders (userID, address, paymentMethod, totalAmount) VALUES (?, ?, ?, ?)";
+    const orderValues = [userID, address, paymentMethod, totalAmount];
+
+    db.query(orderQuery, orderValues, (err, result) => {
+        if (err) {
+            console.error("Error inserting order:", err);
+            return res.status(500).json("Failed to place order.");
+        }
+
+        const orderID = result.insertId; // Get the generated order ID
+
+        // Insert order items into the `order_items` table
+        const itemQuery = "INSERT INTO order_items (orderID, productID, quantity, price) VALUES ?";
+        const itemValues = items.map(item => [orderID, item.productID, item.quantity, item.price]);
+
+        db.query(itemQuery, [itemValues], (err) => {
+            if (err) {
+                console.error("Error inserting order items:", err);
+                return res.status(500).json("Failed to save order items.");
+            }
+
+            res.status(201).json({ message: "Order placed successfully!", orderID });
         });
     });
 });

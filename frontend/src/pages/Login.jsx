@@ -46,6 +46,7 @@ const Login = () => {
                 />
                 <button type="submit">Login</button>
             </form>
+            <p>Don't have an account? <span onClick={() => navigate("/signup")} style={{ color: 'blue', cursor: 'pointer' }}>Sign up</span></p>
         </div>
     );
 };

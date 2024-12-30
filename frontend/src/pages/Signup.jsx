@@ -8,6 +8,7 @@ const Signup = () => {
         username: "",
         email: "",
         password: "",
+        phone_number: "",
     });
     const navigate = useNavigate();
 
@@ -55,8 +56,18 @@ const Signup = () => {
                     onChange={handleChange}
                     required
                 />
+
+<input
+                    type="text"
+                    name="phone_number"
+                    placeholder="Phone Number"
+                    value={formData.phone_number}
+                    onChange={handleChange}
+                    required
+                />
                 <button type="submit">Sign Up</button>
             </form>
+            <p>Already have an account? <span onClick={() => navigate("/login")} style={{ color: 'blue', cursor: 'pointer' }}>Login</span></p>
         </div>
     );
 };
