@@ -3,12 +3,14 @@ import axios from "axios";
 import ProductModal from "../pages/ProductModal"; // Import the updated modal component
 import Navbar from "../pages/Navbar";
 import './navbarstyle.css';
+import { useNavigate } from "react-router-dom";
 
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null); // Track the selected product
     const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
-    
+    const navigate = useNavigate();
+        
    
 
     useEffect(() => {
@@ -34,8 +36,18 @@ const Home = () => {
     };
 
     const handleAddToCart = (product, quantity) => {
-        // Get current cart items from localStorage
-        let cart = JSON.parse(localStorage.getItem("cart")) || [];
+        const isLoggedIn = localStorage.getItem("user");
+
+        if (!isLoggedIn) {
+            alert("Please log in to add items to the cart.");
+            navigate("/login");
+            return;
+        }
+
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userKey = user ? user.username : null;
+
+        let cart = JSON.parse(localStorage.getItem(`cart_${userKey}`)) || [];
 
         // Check if the product is already in the cart
         const existingProductIndex = cart.findIndex(item => item.productID === product.productID);
@@ -48,27 +60,41 @@ const Home = () => {
         }
 
         // Save updated cart to localStorage
-        localStorage.setItem("cart", JSON.stringify(cart));
+        localStorage.setItem(`cart_${userKey}`, JSON.stringify(cart));
         alert("Product added to cart!");
     };
 
-
+const isUserLoggedIn = localStorage.getItem("user");
     return (
         <>
             <Navbar />
             
             {/* Hero Section */}
-            <section className="hero-section">
-                <div className="hero-overlay">
-                    <h1>Shop the Best Beauty Products</h1>
-                    <p>Discover your perfect products for face, body, and hair.</p>
-                    <button>Shop Now</button>
-                </div>
-            </section>
+            {!isUserLoggedIn && (
+                <section className="hero-section">
+                    <div className="hero-overlay">
+                        <h1>Shop the Best Beauty Products</h1>
+                        <p>Discover your perfect products for face, body, and hair.</p>
+
+                        <button
+                            onClick={() => {
+                                const section = document.getElementById("home-cont");
+                                if (section) {
+                                    const offset = -165; 
+                                    const sectionPosition = section.getBoundingClientRect().top + window.pageYOffset + offset;
+                                    window.scrollTo({ top: sectionPosition, behavior: "smooth" });
+                                }
+                            }}
+                        >
+                            Shop Now
+                        </button>
+                    </div>
+                </section>
+            )}
 
             <div className="home-page">
                 <h1>Our Products</h1>
-                <div className="home-content">
+                <div id="home-cont" className="home-content">
                     {/* Sidebar for Categories */}
                     <div className="sidebar">
                         <h2>Categories</h2>
@@ -118,9 +144,21 @@ const Home = () => {
                                 )}
                             </div>
 
-                            <button onClick={() => handleViewDetails(product)}>
-                                View Details
-                            </button>
+                            <button 
+    onClick={() => handleViewDetails(product)} 
+    style={{
+        background: "none",
+        border: "none",
+        color: "green",
+        cursor: "pointer",
+        padding: "0",
+        textDecoration: "none", 
+    }}
+    onMouseEnter={(e) => e.target.style.textDecoration = "underline"}
+    onMouseLeave={(e) => e.target.style.textDecoration = "none"}
+>
+    View Details
+</button>
                              {/* Add to Cart Button */}
                              <button onClick={() => handleAddToCart(product, 1)}> {/* Default quantity set to 1 */}
                                 Add to Cart

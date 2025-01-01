@@ -6,12 +6,35 @@ import Navbar from "../pages/Navbar";
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
-    const navigate = useNavigate();  // Hook to navigate to different pages
+    const navigate = useNavigate();  
+    const isLoggedIn = localStorage.getItem("user");
+    const user = JSON.parse(localStorage.getItem("user"));
+    const userKey = user ? user.username : null;
 
-    useEffect(() => {
-        const storedCartItems = JSON.parse(localStorage.getItem("cart")) || [];
-        setCartItems(storedCartItems);
-    }, []);
+  useEffect(() => { 
+    
+    if (!isLoggedIn) {
+        alert("Please log in to view your cart.");
+        navigate("/login");
+        return null;
+    }
+
+    const fetchCart = () => {
+        try {
+            const storedCartItems = JSON.parse(localStorage.getItem(`cart_${userKey}`)) || [];
+            setCartItems(storedCartItems);
+        } catch (err) {
+            console.error("Error fetching cart data:", err);
+            setCartItems([]); 
+        }
+    };
+
+    fetchCart();
+    
+    }, [user, userKey, isLoggedIn, navigate]);
+
+   
+  
 
     const updateQuantity = (productID, quantity) => {
         const updatedCart = cartItems.map((item) =>
@@ -20,13 +43,13 @@ const Cart = () => {
                 : item
         );
         setCartItems(updatedCart);
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        localStorage.setItem(`cart_${userKey}`, JSON.stringify(updatedCart));
     };
 
     const removeFromCart = (productID) => {
         const updatedCart = cartItems.filter((item) => item.productID !== productID);
         setCartItems(updatedCart);
-        localStorage.setItem("cart", JSON.stringify(updatedCart));
+        localStorage.setItem(`cart_${userKey}`, JSON.stringify(updatedCart));
         setSelectedItems(selectedItems.filter((id) => id !== productID)); // Remove from selection
     };
 
@@ -59,7 +82,7 @@ const Cart = () => {
     };
 
     const goToShop = () => {
-        navigate("/home"); // Redirect to the home or product page
+        navigate("/customer"); // Redirect to the home or product page
     };
 
     const handleCheckout = () => {

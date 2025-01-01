@@ -61,7 +61,7 @@ const Update = () => {
                 ...product,
                 images: imageUrl, // Include the image URL
             });
-            navigate("/");  // Navigate back to products page after update
+            navigate("/admin");  // Navigate back to products page after update
         } catch (err) {
             console.log("Error updating product:", err);
         }

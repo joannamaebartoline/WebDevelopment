@@ -18,7 +18,9 @@ const Navbar = ({ onSearch }) => {
     }, []);
 
     const handleLogout = () => {
-        localStorage.removeItem("user"); // Clear user data from localStorage
+    
+        localStorage.removeItem("user"); 
+       
         setUser(null); // Reset the user state
         alert("Logged out successfully!");
         navigate("/customer"); // Redirect to home page
@@ -34,6 +36,16 @@ const Navbar = ({ onSearch }) => {
         setDropdownVisible(!dropdownVisible); // Toggle the dropdown visibility
     };
 
+    const handleCartClick = () => {
+        const isLoggedIn = localStorage.getItem("user");
+
+        if (!isLoggedIn) {
+            alert("Please log in to view your cart.");
+            navigate("/login"); 
+        } else {
+            navigate("/cart"); 
+        }
+    };
 
     return (
         <nav className="navbar">
@@ -53,20 +65,11 @@ const Navbar = ({ onSearch }) => {
                 }}
             />
 
-            <Link to="/cart" className="nav-link">
-                <img src={cartIcon} alt="Cart" className="cart-icon" />
-            </Link>
+<div className="cart-icon-container" onClick={handleCartClick}>
+                    <img src={cartIcon} alt="Cart" className="cart-icon" />
+                </div>
 
-            <div className="account-section">
-                {/* Display Welcome message if user is logged in */}
-                {user ? (
-                    <p className= "username">Welcome, {user.username}</p>
-                ) : (
-                    <>
-                        <Link to="/login" className="nav-link">Login</Link>
-                        <Link to="/signup" className="nav-link">Sign Up</Link>
-                    </>
-                )}
+
                 <div className="account-dropdown">
                     <img
                         src={accountIcon}
@@ -74,12 +77,18 @@ const Navbar = ({ onSearch }) => {
                         className="account-icon"
                         onClick={toggleDropdown}
                     />
-                    <div className={`dropdown-menu ${dropdownVisible ? "show" : ""}`}>
-                        {user && <button onClick={handleLogout} className="dropdown-item">Logout</button>}
+                     <div className={`dropdown-menu ${dropdownVisible ? "show" : ""}`}>
+                        {!user ? (
+                            <>
+                                <Link to="/login" className="nav-link-ls">Login</Link>
+                                <Link to="/signup" className="nav-link-ls">Sign Up</Link>
+                            </>
+                        ) : (
+                            <button onClick={handleLogout} className="dropdown-item">Logout</button>
+                        )}
                     </div>
                 </div>
             </div>
-        </div>
     </nav>
     );
 };

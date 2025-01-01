@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
 
+
 const Add = () => {
     const [product, setProduct] = useState({
         title: "",
@@ -23,19 +24,28 @@ const Add = () => {
 
     const handleClick = async (e) => {
         e.preventDefault();
-        try {
-            let imagesUrl = "";
-            if (file) {
-                const formData = new FormData();
-                formData.append("file", file);
+
+        let imageUrl = product.images;
+
+        if (file) {
+            const formData = new FormData();
+            formData.append("file", file);
+            try {
                 const uploadRes = await axios.post("http://localhost:8800/upload", formData);
-                imagesUrl = uploadRes.data.filePath;
+                imageUrl = uploadRes.data.filePath; // Get the file path from response
+            } catch (err) {
+                console.log("Error uploading file:", err);
+                return;
             }
+        }
+        
+        try {
+            // Send the image URL and other product details
             await axios.post("http://localhost:8800/products", {
                 ...product,
-                images: imagesUrl,
+                images: imageUrl, // If image is unchanged, it will just use the previous URL
             });
-            navigate("/");  // Navigate to products page after adding
+            navigate("/admin");  // Navigate to products page after adding
         } catch (err) {
             console.log("Error adding product:", err);
         }
@@ -101,7 +111,7 @@ const Add = () => {
                     <button
                         type="button"
                         className="cancel"
-                        onClick={() => navigate("/")}
+                        onClick={() => navigate("/admin")}
                     >
                         Cancel
                     </button>

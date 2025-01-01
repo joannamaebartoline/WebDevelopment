@@ -5,6 +5,7 @@ import multer from 'multer';
 import path from 'path';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
+import fs from 'fs';
 
 
 
@@ -32,10 +33,20 @@ app.use('/uploads', express.static('uploads'));
 // Multer setup for file uploads
 const storage = multer.diskStorage({
     destination: (req, file, cb) => {
-        cb(null, "uploads");
+        cb(null, "uploads"); // Save to uploads folder
     },
     filename: (req, file, cb) => {
-        cb(null, Date.now() + path.extname(file.originalname));
+        // Check if file already exists
+        const filePath = path.join('uploads', file.originalname);
+        fs.access(filePath, fs.constants.F_OK, (err) => {
+            if (err) {
+                // If file doesn't exist, use the original file name
+                cb(null, Date.now() + path.extname(file.originalname));
+            } else {
+                // If file exists, send a response indicating the file already exists
+                cb(null, file.originalname); // Or any custom naming logic here
+            }
+        });
     },
 });
 
@@ -47,8 +58,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
     if (!file) return res.status(400).json("No file uploaded.");
     res.status(200).json({ filePath: `/uploads/${file.filename}` });
 });
-
-
 
 // User Signup
 app.post('/signup', async (req, res) => {
@@ -142,74 +151,6 @@ app.post('/adminlogin', (req, res) => {
     });
 });
 
-app.post('/place-order', (req, res) => {
-    const { userID, address, paymentMethod, totalAmount, items } = req.body;
-
-    if (!userID || !address || !paymentMethod || !totalAmount || !items || items.length === 0) {
-        return res.status(400).json("All fields are required.");
-    }
-
-    const orderQuery = "INSERT INTO orders (userID, address, paymentMethod, totalAmount) VALUES (?, ?, ?, ?)";
-    const orderValues = [userID, address, paymentMethod, totalAmount];
-
-    db.query(orderQuery, orderValues, (err, result) => {
-        if (err) {
-            console.error("Error inserting order:", err);
-            return res.status(500).json("Failed to place order.");
-        }
-
-        const orderID = result.insertId;
-
-        const itemQuery = "INSERT INTO order_items (orderID, productID, quantity, price) VALUES ?";
-        const itemValues = items.map(item => [orderID, item.productID, item.quantity, item.price]);
-
-        db.query(itemQuery, [itemValues], (err) => {
-            if (err) {
-                console.error("Error inserting order items:", err);
-                return res.status(500).json("Failed to save order items.");
-            }
-
-            res.status(201).json({ message: "Order placed successfully!", orderID });
-        });
-    });
-});
- 
-
-app.post('/orders', (req, res) => {
-    const { userID, address, paymentMethod, totalAmount, items } = req.body;
-
-    if (!userID || !address || !paymentMethod || !totalAmount || !items || items.length === 0) {
-        return res.status(400).json("All fields are required.");
-    }
-
-    // Insert the order into the `orders` table
-    const orderQuery = "INSERT INTO orders (userID, address, paymentMethod, totalAmount) VALUES (?, ?, ?, ?)";
-    const orderValues = [userID, address, paymentMethod, totalAmount];
-
-    db.query(orderQuery, orderValues, (err, result) => {
-        if (err) {
-            console.error("Error inserting order:", err);
-            return res.status(500).json("Failed to place order.");
-        }
-
-        const orderID = result.insertId; // Get the generated order ID
-
-        // Insert order items into the `order_items` table
-        const itemQuery = "INSERT INTO order_items (orderID, productID, quantity, price) VALUES ?";
-        const itemValues = items.map(item => [orderID, item.productID, item.quantity, item.price]);
-
-        db.query(itemQuery, [itemValues], (err) => {
-            if (err) {
-                console.error("Error inserting order items:", err);
-                return res.status(500).json("Failed to save order items.");
-            }
-
-            res.status(201).json({ message: "Order placed successfully!", orderID });
-        });
-    });
-});
-
-
 // Add product
 app.post("/products", (req, res) => {
     const { title, description, price, images, category } = req.body;
@@ -234,7 +175,18 @@ app.post("/products", (req, res) => {
         res.status(201).json("Product has been added successfully.");
     });
 });
+app.get('/products/category/:category', (req, res) => {
+    const { category } = req.params;
 
+    const q = "SELECT * FROM products WHERE category = ?";
+    db.query(q, [category], (err, data) => {
+        if (err) {
+            console.log("Error fetching products by category:", err);
+            return res.status(500).json(err);
+        }
+        res.status(200).json(data);
+    });
+});
 // Update product
 app.put("/products/:id", (req, res) => {
     const productID = req.params.id;

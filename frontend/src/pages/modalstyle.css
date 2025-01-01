@@ -13,14 +13,16 @@
 }
 
 .modal-content {
-    background: white;
+    background: #fff;
     padding: 20px;
-    padding-top: 40px; /* Increase padding to avoid overlap with the close button */
-    border-radius: 8px;
-    width: 400px;
+    padding-top: 40px; /* Ensure padding to avoid overlap with the close button */
+    border-radius: 12px; /* More rounded corners */
+    width: 450px; /* Adjusted width for better appearance */
     max-width: 90%;
     position: relative;
-    z-index: 1001; /* Modal content above the overlay */
+    z-index: 1001; /* Modal content above overlay */
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1); /* Soft shadow for a floating effect */
+    text-align: center; /* Center text content */
 }
 
 .modal-close-button {
@@ -29,22 +31,43 @@
     right: 10px;
     background: transparent;
     border: none;
-    font-size: 20px;
+    font-size: 22px; /* Slightly larger font */
     cursor: pointer;
-    color: black; /* Make sure it's visible */
+    color: #333; /* Neutral color */
     z-index: 1002; /* Close button above modal content */
 }
 
 .modal-close-button:hover {
-    color: red; /* Add hover effect for better visibility */
+    color: #e74c3c; /* Red color for hover effect */
 }
 
 .modal-content h1 {
-    margin-bottom: 15px;
+    font-size: 24px; /* Larger title for prominence */
+    margin-bottom: 20px; /* More space below title */
+    font-weight: 600; /* Slightly bolder title */
+    color: #2c3e50; /* Dark color for better contrast */
 }
 
 .modal-content p {
-    margin-bottom: 10px;
+    font-size: 16px; /* Adjust text size for better readability */
+    line-height: 1.5; /* Line height for more spacing between lines */
+    color: #7f8c8d; /* Softer color for paragraph text */
+    margin-bottom: 20px;
+}
+
+.modal-content button {
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #3498db; /* Beautiful blue color */
+    border: none;
+    color: white;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.modal-content button:hover {
+    background-color: #2980b9; /* Darker shade on hover */
 }
 
 @media (max-width: 768px) {
@@ -57,5 +80,14 @@
     .modal-content {
         padding: 15px;
         width: 90%;
+        max-width: 95%; /* Ensure it doesn't overflow on mobile */
+    }
+
+    .modal-content h1 {
+        font-size: 20px; /* Adjust title size for mobile */
+    }
+
+    .modal-content p {
+        font-size: 14px; /* Adjust paragraph size for mobile */
     }
 }
