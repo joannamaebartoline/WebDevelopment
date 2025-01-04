@@ -42,7 +42,7 @@ const AllOrders = () => {
                         <p><strong>Order Date:</strong> {formatDate(order.orderDate)}</p>
                         <p><strong>User ID:</strong> {order.userID}</p>
                         <p><strong>User Name:</strong> {order.userName}</p>
-                        <p><strong>Total Amount:</strong> ₱{order.totalAmount.toFixed(2)}</p>
+                        <p><strong>User Address:</strong> {order.userAddress}</p>
                         <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
                         <p><strong>Status:</strong> {order.status}</p>
 

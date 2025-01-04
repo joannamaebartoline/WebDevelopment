@@ -67,6 +67,7 @@ app.post("/orders", (req, res) => {
         orderDate: new Date().toISOString(),
         ...req.body,  
     };
+
     orders.push(newOrder);
     res.status(201).send("Order placed successfully");
 });
@@ -77,10 +78,10 @@ app.get("/orders", (req, res) => {
 
 // User Signup
 app.post('/signup', async (req, res) => {
-    const { username, email, password, phone_number } = req.body;
+    const { username, email, password, phone_number, address } = req.body;
 
     // Basic validation
-    if (!username || !email || !password || !phone_number) {
+    if (!username || !email || !password || !phone_number || !address) {
         return res.status(400).json("All fields are required.");
     }
 
@@ -96,8 +97,8 @@ app.post('/signup', async (req, res) => {
         const hashedPassword = await bcrypt.hash(password, 10);
 
         // Insert user into the database
-        const q = "INSERT INTO customers (`username`, `email`, `password`, `phone_number`) VALUES (?)";
-        const values = [username, email, hashedPassword, phone_number];
+        const q = "INSERT INTO customers (`username`, `email`, `password`, `phone_number`, `address`) VALUES (?)";
+        const values = [username, email, hashedPassword, phone_number, address];
 
         db.query(q, [values], (err) => { 
             if (err) {
@@ -136,9 +137,9 @@ app.post('/login', (req, res) => {
         res.status(200).json({
             message: "Login successful",
             token,
-            user: { id: user.userID, username: user.username, email: user.email }
+            user: { id: user.userID, username: user.username, email: user.email, address: user.address }
         });
-    });
+    }); 
 });
 
 // Admin Login

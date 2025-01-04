@@ -47,9 +47,11 @@ const CheckoutPage = () => {
 
     const handlePlaceOrder = async () => {
         const userData = JSON.parse(localStorage.getItem("user"));
+       
         const orderData = {
-            userID: userData.user.id, // Ensure only the user ID is sent
+            userID: userData.user.id, 
             userName: userData.user.username,
+            userAddress: userData.user.address,
             checkoutItems,
             totalAmount,
             paymentMethod,

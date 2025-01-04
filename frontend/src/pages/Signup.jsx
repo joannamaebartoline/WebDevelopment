@@ -9,6 +9,7 @@ const Signup = () => {
         email: "",
         password: "",
         phone_number: "",
+        address: "",
     });
     const navigate = useNavigate();
 
@@ -62,6 +63,15 @@ const Signup = () => {
                     name="phone_number"
                     placeholder="Phone Number"
                     value={formData.phone_number}
+                    onChange={handleChange}
+                    required
+                />
+
+<input
+                    type="text"
+                    name="address"
+                    placeholder="Address"
+                    value={formData.address}
                     onChange={handleChange}
                     required
                 />
