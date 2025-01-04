@@ -50,7 +50,17 @@ const Navbar = ({ onSearch }) => {
     return (
         <nav className="navbar">
         <div className="navbar-container">
-            <Link to="/customer" className="nav-link">Home</Link>
+        <button 
+  className="nav-link" 
+  onClick={(e) => {
+    e.preventDefault();  
+    window.location.replace("/customer");  
+  }}
+  style={{ background: 'none', border: 'none', padding: 0, color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}
+>
+  Home
+</button>
+
 
             {/* Search Bar */}
             <input

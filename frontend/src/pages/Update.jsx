@@ -21,7 +21,7 @@ const Update = () => {
             try {
                 const res = await axios.get(`http://localhost:8800/products/${id}`);
                 if (res.data) {
-                    setProduct(res.data);  // Use res.data directly because it's already a single product object
+                    setProduct(res.data);  
                 }
             } catch (err) {
                 console.log("Error fetching product:", err);
@@ -128,7 +128,7 @@ const Update = () => {
                     <button
                         type="button"
                         className="cancel"
-                        onClick={() => navigate("/")}
+                        onClick={() => navigate("/admin")}
                     >
                         Cancel
                     </button>

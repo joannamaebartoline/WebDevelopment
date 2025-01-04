@@ -59,6 +59,22 @@ app.post('/upload', upload.single('file'), (req, res) => {
     res.status(200).json({ filePath: `/uploads/${file.filename}` });
 });
 
+let orders = [];
+
+app.post("/orders", (req, res) => {
+    const newOrder = {
+        orderID: orders.length + 1,
+        orderDate: new Date().toISOString(),
+        ...req.body,  
+    };
+    orders.push(newOrder);
+    res.status(201).send("Order placed successfully");
+});
+
+app.get("/orders", (req, res) => {
+    res.json(orders);  
+});
+
 // User Signup
 app.post('/signup', async (req, res) => {
     const { username, email, password, phone_number } = req.body;

@@ -15,6 +15,7 @@ import AdminLogin from "./pages/AdminLogin";
 import './style.css';
 
 const App = () => {
+
     return (
         <BrowserRouter>
             <Routes>

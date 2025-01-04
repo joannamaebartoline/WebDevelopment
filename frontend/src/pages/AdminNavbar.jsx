@@ -48,6 +48,7 @@ const AdminNavbar = () => {
                         )}
                     </div>
                 </li>
+                <li><Link to="/admin">Home</Link></li>
                 <li><Link to="/all-orders">All Orders</Link></li>
                 <li><Link to="/all-payments">All Payments</Link></li>
             </ul>

@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from "react";
-import { useNavigate } from "react-router-dom";  // Use useNavigate instead of useHistory
+import React, { useState, useEffect, useMemo } from "react";
+import { useNavigate } from "react-router-dom"; 
 import "./cartstyle.css";
 import Navbar from "../pages/Navbar";
 
@@ -8,33 +8,28 @@ const Cart = () => {
     const [selectedItems, setSelectedItems] = useState([]);
     const navigate = useNavigate();  
     const isLoggedIn = localStorage.getItem("user");
-    const user = JSON.parse(localStorage.getItem("user"));
+    const user = useMemo(() => JSON.parse(localStorage.getItem("user")), []);
     const userKey = user ? user.username : null;
 
-  useEffect(() => { 
-    
-    if (!isLoggedIn) {
-        alert("Please log in to view your cart.");
-        navigate("/login");
-        return null;
-    }
-
-    const fetchCart = () => {
-        try {
-            const storedCartItems = JSON.parse(localStorage.getItem(`cart_${userKey}`)) || [];
-            setCartItems(storedCartItems);
-        } catch (err) {
-            console.error("Error fetching cart data:", err);
-            setCartItems([]); 
+    useEffect(() => { 
+        if (!isLoggedIn) {
+            alert("Please log in to view your cart.");
+            navigate("/login");
+            return null;
         }
-    };
 
-    fetchCart();
-    
+        const fetchCart = () => {
+            try {
+                const storedCartItems = JSON.parse(localStorage.getItem(`cart_${userKey}`)) || [];
+                setCartItems(storedCartItems);
+            } catch (err) {
+                console.error("Error fetching cart data:", err);
+                setCartItems([]); 
+            }
+        };
+
+      fetchCart();
     }, [user, userKey, isLoggedIn, navigate]);
-
-   
-  
 
     const updateQuantity = (productID, quantity) => {
         const updatedCart = cartItems.map((item) =>
@@ -47,10 +42,12 @@ const Cart = () => {
     };
 
     const removeFromCart = (productID) => {
-        const updatedCart = cartItems.filter((item) => item.productID !== productID);
-        setCartItems(updatedCart);
-        localStorage.setItem(`cart_${userKey}`, JSON.stringify(updatedCart));
-        setSelectedItems(selectedItems.filter((id) => id !== productID)); // Remove from selection
+        if (window.confirm("Are you sure you want to remove this item?")) {
+            const updatedCart = cartItems.filter((item) => item.productID !== productID);
+            setCartItems(updatedCart);
+            localStorage.setItem(`cart_${userKey}`, JSON.stringify(updatedCart));
+            setSelectedItems(selectedItems.filter((id) => id !== productID)); 
+        }
     };
 
     const calculateSubtotal = (item) => item.price * item.quantity;
@@ -67,40 +64,35 @@ const Cart = () => {
 
     const handleSelectItem = (productID) => {
         if (selectedItems.includes(productID)) {
-            setSelectedItems(selectedItems.filter((id) => id !== productID)); // Deselect
+            setSelectedItems(selectedItems.filter((id) => id !== productID));
         } else {
-            setSelectedItems([...selectedItems, productID]); // Select
+            setSelectedItems([...selectedItems, productID]);
         }
     };
 
     const handleSelectAll = () => {
         if (selectedItems.length === cartItems.length) {
-            setSelectedItems([]); // Deselect all
+            setSelectedItems([]); 
         } else {
-            setSelectedItems(cartItems.map((item) => item.productID)); // Select all
+            setSelectedItems(cartItems.map((item) => item.productID)); 
         }
     };
 
     const goToShop = () => {
-        navigate("/customer"); // Redirect to the home or product page
+        window.location.href = "/customer";
     };
 
     const handleCheckout = () => {
-        // Collect the selected items and total
         const checkoutItems = cartItems.filter((item) =>
             selectedItems.includes(item.productID)
         );
         const totalAmount = calculateTotal();
-
-        // Redirect to the checkout page with the selected items and total amount
         navigate("/checkout", { state: { checkoutItems, totalAmount } });
     };
 
     return (
         <div>
-            {/* Render Navbar */}
             <Navbar />
-
             <div className="cart-container">
                 <h1 className="cart-title">Your Cart</h1>
                 {cartItems.length > 0 ? (

@@ -1,96 +1,191 @@
-import React, { useState } from 'react';
-import { useLocation } from 'react-router-dom';  // To get the passed state
-import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import React, { useState, useEffect } from "react";
+import { useLocation, useNavigate } from "react-router-dom";
+import Navbar from "../pages/Navbar";
+import "./checkoutstyle.css";
+import axios from "axios";
 
-
-const Checkout = () => {
-    const location = useLocation();
-    const { checkoutItems, totalAmount, userID } = location.state || {};  // Get the items and total from state
+const CheckoutPage = () => {
+    const { state } = useLocation();
+    const { checkoutItems, totalAmount } = state || {};
     const navigate = useNavigate();
-    // State for managing address and payment method
-    const [address, setAddress] = useState("");
-    const [paymentMethod, setPaymentMethod] = useState("");
 
-    // Handle the checkout form submission
-    const handleCheckout = async () => {
-        if (!address || !paymentMethod) {
-            alert("Please fill in all fields.");
+    const isLoggedIn = localStorage.getItem("user");
+
+    const [paymentMethod, setPaymentMethod] = useState("cash-on-delivery");
+    const [showCardForm, setShowCardForm] = useState(false);
+    const [paymentDetails, setPaymentDetails] = useState({
+        cardNumber: "",
+        expirationDate: "",
+        cvv: "",
+    });
+    const [message, setMessage] = useState("");
+
+    useEffect(() => {
+        if (!isLoggedIn) {
+            alert("Please log in to proceed with checkout.");
+            navigate("/login");
             return;
         }
-    
+    }, [isLoggedIn, navigate]);
+
+    const handlePaymentMethodChange = (e) => {
+        setPaymentMethod(e.target.value);
+        setShowCardForm(e.target.value === "credit-debit-card");
+    };
+
+    const handlePaymentDetailsChange = (e) => {
+        const { name, value } = e.target;
+        setPaymentDetails((prevDetails) => ({
+            ...prevDetails,
+            [name]: value,
+        }));
+    };
+
+    const handleMessageChange = (e) => {
+        setMessage(e.target.value);
+    };
+
+    const handlePlaceOrder = async () => {
+        const userData = JSON.parse(localStorage.getItem("user"));
         const orderData = {
-            userID,
-            items: checkoutItems,
+            userID: userData.user.id, // Ensure only the user ID is sent
+            userName: userData.user.username,
+            checkoutItems,
             totalAmount,
-            address,
             paymentMethod,
+            status: "Pending"
         };
     
         try {
-            const response = await axios.post("http://localhost:8800/place-order", orderData);
-            if (response.status === 201) {
-                alert("Order placed successfully!");
-                const { orderID } = response.data;
-    
-                // Redirect to order confirmation page
-                navigate("/order-confirmation", { 
-                    state: { 
-                        orderID, 
-                        totalAmount, 
-                        items: checkoutItems 
-                    } 
-                });
-            }
+            await axios.post("http://localhost:8800/orders", orderData);
+            alert("Your order has been placed successfully!");
+            window.location.href = "/customer";
+            
         } catch (error) {
-            console.error("Error placing the order:", error);
-            alert("Failed to place the order. Please try again.");
+            console.error("Error placing order:", error);
         }
     };
     
 
     return (
-        <div className="container">
-        <h1>Checkout</h1>
-        <form className="checkout-page">
-            {/* Shipping Address Input */}
-            <label>Shipping Address</label>
-            <input 
-                type="text" 
-                value={address}
-                onChange={(e) => setAddress(e.target.value)}
-                placeholder="Enter shipping address"
-            />
+        <div>
+            <Navbar />
+            <div className="checkout-container">
+                <h1 className="checkout-title">Checkout</h1>
 
-            {/* Payment Method Selection */}
-            <label>Payment Method</label>
-            <select
-                value={paymentMethod}
-                onChange={(e) => setPaymentMethod(e.target.value)}
-            >
-                <option value="">Select Payment Method</option>
-                <option value="Credit Card">Credit Card</option>
-                <option value="PayPal">PayPal</option>
-                <option value="Cash on Delivery">Cash on Delivery</option>
-            </select>
+                <div className="cart-items">
+                    <h2>Your Cart</h2>
+                    <table className="checkout-table">
+                        <thead>
+                            <tr>
+                                <th>Product</th>
+                                <th>Price</th>
+                                <th>Quantity</th>
+                                <th>Subtotal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {checkoutItems.map((item) => (
+                                <tr key={item.productID}>
+                                    <td>{item.title}</td>
+                                    <td>₱{item.price.toFixed(2)}</td>
+                                    <td>{item.quantity}</td>
+                                    <td>₱{(item.price * item.quantity).toFixed(2)}</td>
+                                </tr>
+                            ))}
+                        </tbody>
+                    </table>
+                    <div className="total-amount">
+                        <h3>Total: ₱{totalAmount.toFixed(2)}</h3>
+                    </div>
+                </div>
 
-            {/* Display selected items */}
-            <h2>Order Summary</h2>
-            <ul>
-                {checkoutItems.map((item) => (
-                    <li key={item.productID}>
-                        {item.title} x {item.quantity} - ₱{(item.price * item.quantity).toFixed(2)}
-                    </li>
-                ))}
-            </ul>
+                <div className="payment-method">
+                    <h2>Payment Method</h2>
+                    <div>
+                        <label>
+                            <input
+                                type="radio"
+                                value="cash-on-delivery"
+                                checked={paymentMethod === "cash-on-delivery"}
+                                onChange={handlePaymentMethodChange}
+                            />
+                            Cash on Delivery
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                value="payment-center"
+                                checked={paymentMethod === "payment-center"}
+                                onChange={handlePaymentMethodChange}
+                            />
+                            Payment Center/E-Wallet (GCash, Maya)
+                        </label>
+                        <label>
+                            <input
+                                type="radio"
+                                value="credit-debit-card"
+                                checked={paymentMethod === "credit-debit-card"}
+                                onChange={handlePaymentMethodChange}
+                            />
+                            Credit/Debit Card
+                        </label>
+                    </div>
 
-            <h3>Total: ₱{totalAmount.toFixed(2)}</h3>
+                    {showCardForm && (
+                        <div className="credit-card-details">
+                            <h3>Add New Credit/Debit Card</h3>
+                            <label>
+                                Card Number:
+                                <input
+                                    type="text"
+                                    name="cardNumber"
+                                    value={paymentDetails.cardNumber}
+                                    onChange={handlePaymentDetailsChange}
+                                    placeholder="XXXX XXXX XXXX XXXX"
+                                />
+                            </label>
+                            <label>
+                                Expiration Date:
+                                <input
+                                    type="text"
+                                    name="expirationDate"
+                                    value={paymentDetails.expirationDate}
+                                    onChange={handlePaymentDetailsChange}
+                                    placeholder="MM/YY"
+                                />
+                            </label>
+                            <label>
+                                CVV:
+                                <input
+                                    type="text"
+                                    name="cvv"
+                                    value={paymentDetails.cvv}
+                                    onChange={handlePaymentDetailsChange}
+                                    placeholder="XXX"
+                                />
+                            </label>
+                        </div>
+                    )}
+                </div>
 
-            {/* Checkout Button */}
-            <button type="button" onClick={handleCheckout}>Place Order</button>
-        </form>
-    </div>
+                <div className="optional-message">
+                    <h2>Message to Seller (Optional)</h2>
+                    <textarea
+                        value={message}
+                        onChange={handleMessageChange}
+                        placeholder="Enter your message here..."
+                    />
+                </div>
+
+                <div className="place-order">
+                    <button className="place-order-button" onClick={handlePlaceOrder}>
+                        Place Order
+                    </button>
+                </div>
+            </div>
+        </div>
     );
 };
 
-export default Checkout;
+export default CheckoutPage;

@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
-import AdminNavbar from "./AdminNavbar"; // Import the Navbar
+import AdminNavbar from "./AdminNavbar"; 
 
 const Products = () => {
     const [products, setProducts] = useState([]);

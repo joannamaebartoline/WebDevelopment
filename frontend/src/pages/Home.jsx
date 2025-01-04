@@ -5,11 +5,11 @@ import Navbar from "../pages/Navbar";
 import './navbarstyle.css';
 import { useNavigate } from "react-router-dom";
 
+
 const Home = () => {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null); // Track the selected product
     const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
-    const navigate = useNavigate();
         
    
 
@@ -34,9 +34,10 @@ const Home = () => {
         setIsModalOpen(false); // Close the modal
         setSelectedProduct(null); // Reset the selected product
     };
-
+const navigate = useNavigate();
     const handleAddToCart = (product, quantity) => {
         const isLoggedIn = localStorage.getItem("user");
+        
 
         if (!isLoggedIn) {
             alert("Please log in to add items to the cart.");
@@ -61,8 +62,15 @@ const Home = () => {
 
         // Save updated cart to localStorage
         localStorage.setItem(`cart_${userKey}`, JSON.stringify(cart));
+        
+        console.log("Updated Cart:", cart);
         alert("Product added to cart!");
     };
+
+    
+    
+    
+    
 
 const isUserLoggedIn = localStorage.getItem("user");
     return (
