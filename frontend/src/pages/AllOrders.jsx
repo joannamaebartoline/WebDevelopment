@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./allordersstyle.css";
-import AdminNavbar from "./AdminNavbar";
+
 
 const AllOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -30,39 +30,82 @@ const AllOrders = () => {
         fetchOrders();
     }, []);
 
+    const handleUpdateStatus = async (orderID, newStatus) => {
+        try {
+            
+            const res = await axios.put(`http://localhost:8800/orders/${orderID}`, { status: newStatus });
+            
+            fetchOrders();  
+            alert(res.data.message);
+        } catch (err) {
+            console.log("Error updating status:", err);
+            alert("Error updating the order status.");
+        }
+    };
+
+    const groupOrdersByStatus = (orders) => {
+        return orders.reduce((groups, order) => {
+            const status = order.status;
+            if (!groups[status]) {
+                groups[status] = [];
+            }
+            groups[status].push(order);
+            return groups;
+        }, {});
+    };
+
+    const groupedOrders = groupOrdersByStatus(orders);
+
     return (
         
         <div className="all-orders-container">
-            <AdminNavbar />  
+            
             <h1>All Orders</h1>
-            <div className="orders-grid">
-                {orders.map((order) => (
-                    <div className="order-card" key={order.orderID}>
-                        <h2>Order ID: {order.orderID}</h2>
-                        <p><strong>Order Date:</strong> {formatDate(order.orderDate)}</p>
-                        <p><strong>User ID:</strong> {order.userID}</p>
-                        <p><strong>User Name:</strong> {order.userName}</p>
-                        <p><strong>User Address:</strong> {order.userAddress}</p>
-                        <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
-                        <p><strong>Status:</strong> {order.status}</p>
+            {["Pending", "Shipped", "Delivered", "Cancelled"].map((status) => (
+                <div key={status} className="orders-section">
+                    <h2>{status} Orders</h2>
+                    {groupedOrders[status] && groupedOrders[status].length > 0 ? (
+                        <div className="orders-grid">
+                            {groupedOrders[status].map((order) => (
+                                <div className="order-card" key={order.orderID}>
+                                    <h2>Order ID: {order.orderID}</h2>
+                                    <p><strong>Order Date:</strong> {formatDate(order.orderDate)}</p>
+                                    <p><strong>User ID:</strong> {order.userID}</p>
+                                    <p><strong>User Name:</strong> {order.userName}</p>
+                                    <p><strong>User Address:</strong> {order.userAddress}</p>
+                                    <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
+                                    <p><strong>Status:</strong> {order.status}</p>
+                                    <select 
+                                        onChange={(e) => handleUpdateStatus(order.orderID, e.target.value)} 
+                                        value={order.status}
+                                    >
+                                        <option value="Pending">Pending</option>
+                                        <option value="Shipped">Shipped</option>
+                                        <option value="Delivered">Delivered</option>
+                                        <option value="Cancelled">Cancelled</option>
+                                    </select>
 
-                        {/* Display ordered products */}
-                        <h3>Ordered Products:</h3>
-                        <ul>
-                            {order.checkoutItems.map((item) => (
-                                <li key={item.productID}>
-                                    <p>{item.title}</p>
-                                    <p>₱{item.price.toFixed(2)}</p>
-                                    <p>Quantity: {item.quantity}</p>
-                                    <p>Subtotal: ₱{(item.price * item.quantity).toFixed(2)}</p>
-                                </li>
-                                
+                                    {/* Display ordered products */}
+                                    <h3>Ordered Products:</h3>
+                                    <ul>
+                                        {order.checkoutItems.map((item) => (
+                                            <li key={item.productID}>
+                                                <p>{item.title}</p>
+                                                <p>₱{item.price.toFixed(2)}</p>
+                                                <p>Quantity: {item.quantity}</p>
+                                                <p>Subtotal: ₱{(item.price * item.quantity).toFixed(2)}</p>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                    <p><strong>Order Total Amount:</strong> ₱{order.totalAmount.toFixed(2)}</p>
+                                </div>
                             ))}
-                        </ul>
-                        <p><strong>Order Total Amount:</strong> ₱{order.totalAmount.toFixed(2)}</p>
-                    </div>
-                ))}
-            </div>
+                        </div>
+                    ) : (
+                        <p>No orders in this status.</p>
+                    )}
+                </div>
+             ))}
         </div>
     );
 };

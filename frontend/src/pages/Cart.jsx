@@ -7,8 +7,15 @@ const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const navigate = useNavigate();  
-    const isLoggedIn = localStorage.getItem("user");
-    const user = useMemo(() => JSON.parse(localStorage.getItem("user")), []);
+    const isLoggedIn = Boolean(localStorage.getItem("user"));
+    const user = useMemo(() => {
+        try {
+            return JSON.parse(localStorage.getItem("user")) || null;
+        } catch (error) {
+            console.error("Error parsing user data:", error);
+            return null;
+        }
+    }, []);
     const userKey = user ? user.username : null;
 
     useEffect(() => { 

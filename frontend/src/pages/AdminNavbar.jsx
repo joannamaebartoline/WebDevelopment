@@ -26,7 +26,8 @@ const AdminNavbar = () => {
     };
 
     return (
-        <nav>
+        <div>
+        <nav className="admin-navbar">
             <ul>
                 <li className="account-dropdown">
                     <img
@@ -53,6 +54,7 @@ const AdminNavbar = () => {
                 <li><Link to="/all-payments">All Payments</Link></li>
             </ul>
         </nav>
+        </div>
     );
 };
 

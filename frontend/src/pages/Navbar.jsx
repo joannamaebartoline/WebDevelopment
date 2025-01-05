@@ -1,7 +1,7 @@
 import React, {useState, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
-import cartIcon from "../assets/cart-icon.png"; // import the cart image
-import accountIcon from "../assets/account-icon.png"; // import the account image
+import cartIcon from "../assets/cart-icon.png";
+import accountIcon from "../assets/account-icon.png"; 
 
 const Navbar = ({ onSearch }) => {
 
@@ -62,7 +62,6 @@ const Navbar = ({ onSearch }) => {
 </button>
 
 
-            {/* Search Bar */}
             <input
                 type="text"
                 placeholder="Search products..."
@@ -97,6 +96,7 @@ const Navbar = ({ onSearch }) => {
                             <button onClick={handleLogout} className="dropdown-item">Logout</button>
                         )}
                     </div>
+                    <Link to="/myorders">My Orders</Link>
                 </div>
             </div>
     </nav>

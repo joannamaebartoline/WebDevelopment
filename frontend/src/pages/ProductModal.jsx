@@ -1,10 +1,12 @@
 import React, { useState } from "react";
 import "./modalstyle.css";
+import { useNavigate } from "react-router-dom";
 
 const ProductModal = ({ product, isOpen, onClose, onAddToCart }) => {
-    const [quantity, setQuantity] = useState(1); // State to manage quantity
+    const [quantity, setQuantity] = useState(1); 
+const navigate = useNavigate();
 
-    if (!isOpen || !product) return null; // Don't render if modal is closed or no product is provided
+    if (!isOpen || !product) return null; 
 
     const handleAddToCart = () => {
         if (quantity <= 0) {
@@ -15,6 +17,33 @@ const ProductModal = ({ product, isOpen, onClose, onAddToCart }) => {
         onAddToCart(product, quantity); // Pass product and quantity to parent handler
         onClose(); // Close the modal after adding to cart
     };
+
+    const handleBuyNow = () => {
+        if (quantity <= 0) {
+            alert("Please select a valid quantity.");
+            return;
+        }
+    
+        const isLoggedIn = localStorage.getItem("user");
+        if (!isLoggedIn) {
+            alert("Please log in to proceed to checkout.");
+            navigate("/login");
+            return;
+        }
+    
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userKey = user ? user.username : null;
+
+        const checkoutProduct = {
+            ...product,
+            quantity,
+        };
+    
+        localStorage.setItem(`buyNow_${userKey}`, JSON.stringify([checkoutProduct]));
+    
+        navigate("/checkout", { state: { checkoutItems: [checkoutProduct] } });
+    };
+    
 
     return (
         <div className="modal-overlay">
@@ -52,6 +81,10 @@ const ProductModal = ({ product, isOpen, onClose, onAddToCart }) => {
                 {/* Add to Cart Button */}
                 <button onClick={handleAddToCart} style={{ padding: "10px 20px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
                     Add to Cart
+                </button>
+
+                <button onClick={handleBuyNow} style={{ padding: "10px 20px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: "5px", cursor: "pointer", marginTop: "10px" }}>
+                    Buy Now
                 </button>
             </div>
         </div>

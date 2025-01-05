@@ -10,8 +10,6 @@ const Home = () => {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null); // Track the selected product
     const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
-        
-   
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -68,7 +66,27 @@ const navigate = useNavigate();
     };
 
     
+    const handleBuyNow = (product, quantity = 1) => {
+        const isLoggedIn = localStorage.getItem("user");
+        if (!isLoggedIn) {
+            alert("Please log in to proceed to checkout.");
+            navigate("/login");
+            return;
+        }
     
+        const user = JSON.parse(localStorage.getItem("user"));
+        const userKey = user ? user.username : null;
+    
+    
+        const checkoutProduct = {
+            ...product,
+            quantity,
+        };
+    
+        localStorage.setItem(`buyNow_${userKey}`, JSON.stringify([checkoutProduct]));
+    
+        navigate("/checkout", { state: { checkoutItems: [checkoutProduct] } });
+    };
     
     
 
@@ -103,28 +121,6 @@ const isUserLoggedIn = localStorage.getItem("user");
             <div className="home-page">
                 <h1>Our Products</h1>
                 <div id="home-cont" className="home-content">
-                    {/* Sidebar for Categories */}
-                    <div className="sidebar">
-                        <h2>Categories</h2>
-                        <ul>
-                            <li><a href="/category/face">Face Products</a></li>
-                            <li><a href="/category/eye">Eye Products</a></li>
-                            <li><a href="/category/lip">Lip Products</a></li>
-                            <li><a href="/category/nail">Nail Products</a></li>
-                            <li><a href="/category/skincare">Skincare Essentials</a></li>
-                            <li><a href="/category/tools">Tools and Accessories</a></li>
-                            <li><a href="/category/body">Body Products</a></li>
-                            <li><a href="/category/hair">Hair Cosmetics</a></li>
-                            <li><a href="/category/fragrances">Fragrances</a></li>
-                        </ul>
-                        <h3>Sort by Price</h3>
-                        <select className="dropdown-select">
-                            <option value="">Select an option</option>
-                            <option value="lowToHigh">Low to High</option>
-                            <option value="highToLow">High to Low</option>
-                        </select>
-                    </div>
-
                 <div className="product-cards">
                     {products.map((product) => (
                         <div className="product-card" key={product.productID}>
@@ -168,9 +164,10 @@ const isUserLoggedIn = localStorage.getItem("user");
     View Details
 </button>
                              {/* Add to Cart Button */}
-                             <button onClick={() => handleAddToCart(product, 1)}> {/* Default quantity set to 1 */}
+                             <button onClick={() => handleAddToCart(product, 1)}> 
                                 Add to Cart
                             </button>
+                            <button onClick={() => handleBuyNow(product, 1)}>Buy Now</button> 
                         </div>
                     ))}
                 </div>

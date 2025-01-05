@@ -12,6 +12,7 @@ import AllPayments from "./pages/AllPayments";  // Add this import
 import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import AdminLogin from "./pages/AdminLogin";
+import Orders from "./pages/Orders";
 import './style.css';
 
 const App = () => {
@@ -32,6 +33,8 @@ const App = () => {
                 <Route path="/login" element={<Login />} />
                 <Route path="/signup" element={<Signup />} />
                 <Route path="/adminlogin" element={<AdminLogin />} />
+                <Route path="/myorders" element={<Orders />} />
+                <Route path="/category/:category" component={Products} />
             </Routes>
         </BrowserRouter>
     );

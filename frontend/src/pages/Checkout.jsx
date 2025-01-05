@@ -6,11 +6,11 @@ import axios from "axios";
 
 const CheckoutPage = () => {
     const { state } = useLocation();
-    const { checkoutItems, totalAmount } = state || {};
+    const { checkoutItems = [], totalAmount = 0 } = state || {};
     const navigate = useNavigate();
-
+    const [user,setUser] = useState(null);
     const isLoggedIn = localStorage.getItem("user");
-
+    const [setCheckoutItems] = useState(checkoutItems);
     const [paymentMethod, setPaymentMethod] = useState("cash-on-delivery");
     const [showCardForm, setShowCardForm] = useState(false);
     const [paymentDetails, setPaymentDetails] = useState({
@@ -19,14 +19,32 @@ const CheckoutPage = () => {
         cvv: "",
     });
     const [message, setMessage] = useState("");
+    
 
     useEffect(() => {
-        if (!isLoggedIn) {
+        const storedUser = localStorage.getItem("user");
+        if (storedUser) {
+            const parsedUser = JSON.parse(storedUser);
+            setUser(parsedUser.user);  
+        } else {
             alert("Please log in to proceed with checkout.");
             navigate("/login");
             return;
         }
+
+      
     }, [isLoggedIn, navigate]);
+
+    useEffect(() => {
+        if (user) {
+            const userKey = user.username;
+            const buyNowProducts = JSON.parse(localStorage.getItem(`buyNow_${userKey}`)) || [];
+            if (buyNowProducts.length > 0) {
+                
+                setCheckoutItems(buyNowProducts);
+            }
+        }
+    }, [user]);
 
     const handlePaymentMethodChange = (e) => {
         setPaymentMethod(e.target.value);
@@ -67,16 +85,24 @@ const CheckoutPage = () => {
             console.error("Error placing order:", error);
         }
     };
-    
+    if (!user) {
+        return <div>Please log in to access the checkout page.</div>;
+    }
+
 
     return (
         <div>
             <Navbar />
             <div className="checkout-container">
                 <h1 className="checkout-title">Checkout</h1>
-
+                <div className="user-info">
+                    <h2>Billing Information</h2>
+                    <p><strong>Name:</strong> {user.username}</p>
+                    <p><strong>Contact Number:</strong> {user.phone_number}</p>
+                    <p><strong>Address:</strong> {user.address}</p>
+                </div>
                 <div className="cart-items">
-                    <h2>Your Cart</h2>
+                    <h2>Your Order/s</h2>
                     <table className="checkout-table">
                         <thead>
                             <tr>
@@ -87,8 +113,8 @@ const CheckoutPage = () => {
                             </tr>
                         </thead>
                         <tbody>
-                            {checkoutItems.map((item) => (
-                                <tr key={item.productID}>
+                        {checkoutItems.map((item, index) => (
+                                <tr key={index}>
                                     <td>{item.title}</td>
                                     <td>₱{item.price.toFixed(2)}</td>
                                     <td>{item.quantity}</td>

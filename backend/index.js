@@ -62,18 +62,101 @@ app.post('/upload', upload.single('file'), (req, res) => {
 let orders = [];
 
 app.post("/orders", (req, res) => {
-    const newOrder = {
-        orderID: orders.length + 1,
-        orderDate: new Date().toISOString(),
-        ...req.body,  
-    };
+    const { userID, userName, userAddress, paymentMethod, status, checkoutItems, totalAmount } = req.body;
 
-    orders.push(newOrder);
-    res.status(201).send("Order placed successfully");
+    const orderQuery = `INSERT INTO orders (userID, userName, userAddress, paymentMethod, status, totalAmount, orderDate) VALUES (?, ?, ?, ?, ?, ?, NOW())`;
+
+    db.query(orderQuery, [userID, userName, userAddress, paymentMethod, status, totalAmount], (err, result) => {
+        if (err) {
+            console.log("Error inserting order:", err);
+            return res.status(500).json({ message: "Error placing the order." });
+        }
+
+        const orderID = result.insertId;
+
+        checkoutItems.forEach(item => {
+            const itemQuery = `INSERT INTO order_items (orderID, productID, title, price, quantity) VALUES (?, ?, ?, ?, ?)`;
+
+            db.query(itemQuery, [orderID, item.productID, item.title, item.price, item.quantity], (err) => {
+                if (err) {
+                    console.log("Error inserting order item:", err);
+                    return res.status(500).json({ message: "Error adding order items." });
+                }
+            });
+        });
+
+        res.status(201).json({ message: "Order placed successfully", orderID });
+    });
 });
 
 app.get("/orders", (req, res) => {
-    res.json(orders);  
+    const query = `
+    SELECT orders.orderID, orders.userID, orders.userName, orders.userAddress, orders.paymentMethod, orders.status, orders.totalAmount, orders.orderDate,
+           order_items.productID, order_items.title, order_items.price, order_items.quantity
+    FROM orders
+    LEFT JOIN order_items ON orders.orderID = order_items.orderID
+    `;
+
+    db.query(query, (err, result) => {
+        if (err) {
+            console.log("Error fetching orders:", err);
+            return res.status(500).json({ message: "Error fetching orders." });
+        }
+
+        // Group the results by orderID to create a structure with checkoutItems
+        const orders = result.reduce((acc, row) => {
+            let order = acc.find(o => o.orderID === row.orderID);
+            if (!order) {
+                order = {
+                    orderID: row.orderID,
+                    userID: row.userID,
+                    userName: row.userName,
+                    userAddress: row.userAddress,
+                    paymentMethod: row.paymentMethod,
+                    status: row.status,
+                    totalAmount: row.totalAmount,
+                    orderDate: row.orderDate,
+                    checkoutItems: []
+                };
+                acc.push(order);
+            }
+            order.checkoutItems.push({
+                productID: row.productID,
+                title: row.title,
+                price: row.price,
+                quantity: row.quantity
+            });
+            return acc;
+        }, []);
+
+        res.json(orders);
+    });
+});
+app.put("/orders/:orderID", (req, res) => {
+    const { orderID } = req.params;
+    const { status } = req.body;
+
+    // Validate status (Optional: depending on your use case)
+    const validStatuses = ["Pending", "Shipped", "Delivered", "Cancelled", "Received"];
+    if (!validStatuses.includes(status)) {
+        return res.status(400).json({ message: "Invalid status." });
+    }
+
+    // Update order status in the database
+    const query = `UPDATE orders SET status = ? WHERE orderID = ?`;
+
+    db.query(query, [status, orderID], (err, result) => {
+        if (err) {
+            console.log("Error updating order status:", err);
+            return res.status(500).json({ message: "Error updating the order status." });
+        }
+
+        if (result.affectedRows === 0) {
+            return res.status(404).json({ message: "Order not found." });
+        }
+
+        res.json({ message: "Order status updated successfully." });
+    });
 });
 
 // User Signup
@@ -137,7 +220,7 @@ app.post('/login', (req, res) => {
         res.status(200).json({
             message: "Login successful",
             token,
-            user: { id: user.userID, username: user.username, email: user.email, address: user.address }
+            user: { id: user.userID, username: user.username, email: user.email, address: user.address, phone_number: user.phone_number }
         });
     }); 
 });

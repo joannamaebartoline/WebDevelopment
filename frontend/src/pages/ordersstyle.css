@@ -1,0 +1,137 @@
+/* General container style */
+.orders-container {
+    width: 60%; /* Reduced width for a more compact look */
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f4f4f4;
+    border-radius: 8px;
+    margin-top: 50px;
+}
+
+/* Heading style */
+.orders-container h1 {
+    text-align: center;
+    color: #333;
+    font-size: 2rem; /* Slightly smaller heading font */
+    margin-bottom: 20px;
+}
+
+/* Individual order container */
+.order-details {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start; /* Aligns content to the top */
+    position: relative;
+    transition: all 0.3s ease;
+}
+
+.order-details:hover {
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+}
+
+/* Order status at the top left */
+.order-status {
+    font-size: 1rem;
+    font-weight: 600; /* Stronger weight for emphasis */
+    color: #555;
+    margin-bottom: 15px; /* Adds space between status and content */
+}
+
+/* Title and order info */
+.order-details h3 {
+    font-size: 1.3rem;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 12px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px; /* Adds a bit of space between letters */
+}
+
+/* Items list style */
+.order-details ul {
+    padding-left: 20px;
+    margin-bottom: 10px;
+    list-style-type: disc; /* Adds bullet points for clarity */
+}
+
+.order-details li {
+    font-size: 1rem;
+    color: #555;
+    margin-bottom: 8px;
+}
+
+/* Total amount at the bottom right */
+.order-total-amount {
+    font-size: 1.1rem;
+    font-weight: 700; /* Stronger weight for emphasis */
+    color: #333;
+    position: absolute;
+    bottom: 20px;
+    right: 20px;
+}
+
+/* Button style */
+.order-received-button {
+    background-color: #4CAF50;
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    position: absolute;
+    bottom: 20px;
+    right: 110px;
+    transition: all 0.3s ease;
+}
+
+.order-received-button:hover {
+    background-color: #45a049;
+}
+
+.order-received-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Empty order message */
+.orders-container p {
+    font-size: 1.2rem;
+    color: #777;
+    text-align: center;
+    margin-top: 40px;
+}
+
+/* Responsive styling */
+@media (max-width: 768px) {
+    .orders-container {
+        width: 90%; /* Adjust width for mobile devices */
+        padding: 15px;
+    }
+
+    .order-details {
+        padding: 15px;
+    }
+
+    .order-details h3 {
+        font-size: 1.2rem; /* Slightly smaller text for mobile */
+        margin-bottom: 10px;
+    }
+
+    .order-received-button {
+        width: 100%;
+        font-size: 1.2rem;
+    }
+
+    /* Adjust the spacing of the order details to make it fit better on mobile */
+    .order-status,
+    .order-total-amount {
+        margin-bottom: 10px;
+    }
+}
