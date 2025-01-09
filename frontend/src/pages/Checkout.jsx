@@ -44,7 +44,7 @@ const CheckoutPage = () => {
                 setCheckoutItems(buyNowProducts);
             }
         }
-    }, [user]);
+    }, [user, setCheckoutItems]);
 
     const handlePaymentMethodChange = (e) => {
         setPaymentMethod(e.target.value);

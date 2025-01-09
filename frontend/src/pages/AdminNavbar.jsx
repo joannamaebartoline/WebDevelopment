@@ -27,33 +27,43 @@ const AdminNavbar = () => {
 
     return (
         <div>
-        <nav className="admin-navbar">
-            <ul>
-                <li className="account-dropdown">
-                    <img
-                        src={accountIcon}
-                        alt="Account"
-                        className="account-icon"
-                        onClick={toggleDropdown} // Toggle dropdown on icon click
-                    />
-                    <div className={`dropdown-menu ${dropdownVisible ? "show" : ""}`}>
-                        {user ? (
-                            <>
-                                <p>Welcome, {user.username}</p>
-                                <button onClick={handleLogout}>Logout</button>
-                            </>
-                        ) : (
-                            <>
-                                <Link to="/adminlogin" className="dropdown-item">Login</Link>
-                            </>
-                        )}
+            <nav className="admin-navbar">
+                {/* Replace ul with div */}
+                <div className="nav-container">
+                    {/* Replace li with div */}
+                    
+                    <div>
+                        <button className="nav-buttonadmin">
+                            <Link to="/admin">Home</Link>
+                        </button>
                     </div>
-                </li>
-                <li><Link to="/admin">Home</Link></li>
-                <li><Link to="/all-orders">All Orders</Link></li>
-                <li><Link to="/all-payments">All Payments</Link></li>
-            </ul>
-        </nav>
+                    <div>
+                        <button className="nav-buttonadmin">
+                            <Link to="/all-orders " style={{ color: "white", textDecoration: "none" }}>All Orders</Link>
+                        </button>
+                    </div>
+                    <div className="account-dropdownadmin">
+                        <img
+                            src={accountIcon}
+                            alt="Account"
+                            className="account-iconadmin"
+                            onClick={toggleDropdown} // Toggle dropdown on icon click
+                        />
+                        <div className={`dropdown-menuadmin ${dropdownVisible ? "show" : ""}`}>
+                            {user ? (
+                                <>
+                                    <p>Welcome, {user.username}</p>
+                                    <button onClick={handleLogout}>Logout</button>
+                                </>
+                            ) : (
+                                <>
+                                    <Link to="/adminlogin" className="dropdown-itemadmin  " style={{ color: "white", textDecoration: "none" }}>Login</Link>
+                                </>
+                            )}
+                        </div>
+                    </div>
+                </div>
+            </nav>
         </div>
     );
 };

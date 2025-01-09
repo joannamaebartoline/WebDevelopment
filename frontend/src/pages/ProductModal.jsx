@@ -38,10 +38,11 @@ const navigate = useNavigate();
             ...product,
             quantity,
         };
+        const totalAmount = checkoutProduct.price * checkoutProduct.quantity;
     
         localStorage.setItem(`buyNow_${userKey}`, JSON.stringify([checkoutProduct]));
     
-        navigate("/checkout", { state: { checkoutItems: [checkoutProduct] } });
+        navigate("/checkout", { state: { checkoutItems: [checkoutProduct], totalAmount } });
     };
     
 
@@ -77,15 +78,19 @@ const navigate = useNavigate();
                         }}
                     />
                 </div>
-
+                        <div class="button-container">
                 {/* Add to Cart Button */}
-                <button onClick={handleAddToCart} style={{ padding: "10px 20px", backgroundColor: "#28a745", color: "white", border: "none", borderRadius: "5px", cursor: "pointer" }}>
-                    Add to Cart
-                </button>
-
-                <button onClick={handleBuyNow} style={{ padding: "10px 20px", backgroundColor: "#007bff", color: "white", border: "none", borderRadius: "5px", cursor: "pointer", marginTop: "10px" }}>
+                <button className="add-to-cart-btn-modal" onClick={() => handleAddToCart(product, 1)}> 
+                             <img 
+                src={require("../assets/add-to-cart-icon.png")} // Adjust the path based on your project structure
+                alt="Add to Cart"
+                className="cart-icon-img"
+            />
+                            </button >
+                <button className="buy-now-btn-modal" onClick={handleBuyNow} >
                     Buy Now
                 </button>
+                </div>
             </div>
         </div>
     );

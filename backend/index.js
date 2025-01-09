@@ -59,6 +59,25 @@ app.post('/upload', upload.single('file'), (req, res) => {
     res.status(200).json({ filePath: `/uploads/${file.filename}` });
 });
 
+app.put("/products/:productID/rating", async (req, res) => {
+    const { productID } = req.params;
+    const { rating } = req.body;
+
+    try {
+        const product = await db.getProductById(productID);
+        const newAverageRating = ((product.rating * product.ratingCount) + rating) / (product.ratingCount + 1);
+
+        await db.updateProductRating(productID, {
+            rating: newAverageRating,
+            ratingCount: product.ratingCount + 1
+        });
+
+        res.status(200).send("Rating updated successfully");
+    } catch (error) {
+        res.status(500).send("Error updating rating");
+    }
+});
+
 let orders = [];
 
 app.post("/orders", (req, res) => {

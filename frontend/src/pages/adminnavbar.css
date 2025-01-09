@@ -1,142 +1,119 @@
-/* Navbar Styles */
-nav {
-    background-color: #333; /* Dark background for navbar */
-    color: white;
+/* General styles for the admin navbar */
+.admin-navbar {
+    background-color: #333; /* Dark background for the navbar */
+    color: #fff; /* White text */
     padding: 10px 20px;
-    display: flex;
-    justify-content: space-between; /* Align items to the left */
-    align-items: center; /* Vertically center the items */
-    position: fixed;
-    top: 0;
-    width: 100%;
-    height: 60px;
-    z-index: 1000;
+    display: flex; /* Flexbox layout */
+    justify-content: space-between; /* Space out items horizontally */
+    align-items: center; /* Center items vertically */
 }
 
-/* Navbar List */
-nav ul {
-    list-style: none;
-    margin: 0;
-    padding: 0;
-    display: flex; /* Align list items horizontally */
-    align-items: center; /* Align items vertically in the center */
+/* Container for the navigation items */
+.nav-container {
+    display: flex; /* Use flexbox for alignment */
+    align-items: center; /* Center items vertically */
+    gap: 15px; /* Add spacing between items */
 }
 
-nav li {
-    margin-right: 20px; /* Space between items */
-}
-
-/* Account Icon Styles */
-.account-icon img {
-    width: 24px; /* Set size of the account icon */
-    height: 24px;
-    border-radius: 50%; /* Make it circular */
-    cursor: pointer;
-    transition: transform 0.3s; /* Add smooth hover effect */
-    vertical-align: middle; /* Align image vertically with text */
-}
-
-/* Hover effect for account icon */
-.account-icon img:hover {
-    transform: scale(1.1); /* Slight zoom effect on hover */
-}
-
-/* Link Styles */
-nav li a {
-    color: white;
-    text-decoration: none;
-    font-size: 16px;
-    padding: 10px 15px;
-    transition: color 0.3s, background-color 0.3s;
-    border-radius: 5px; /* Rounded corners for links */
-    display: flex;
-    align-items: center; /* Vertically align the text */
-}
-
-nav li a:hover {
-    color: #4CAF50; /* Change text color on hover */
-    background-color: #555; /* Background change on hover */
-}
-
-
-/* Dropdown container */
-.dropdown {
+/* Styles for account dropdown */
+.account-dropdownadmin {
     position: relative;
-  }
-  
-  /* Link to toggle dropdown */
-  .dropdown-toggle {
     cursor: pointer;
-  }
-  
-  /* Hide dropdown by default */
-  .dropdown-menu {
-    display: none;
+}
+
+/* Account icon styling */
+.account-iconadmin {
+    width: 32px;
+    height: 32px;
+    border-radius: 50%; /* Circular profile image */
+    filter: brightness(0) invert(1);
+    margin-left: 1120px;
+}
+
+/* Dropdown menu */
+.dropdown-menuadmin {
     position: absolute;
-    top: 100%;
-    left: 0;
-    background-color: white;
-    box-shadow: 0px 8px 16px rgba(0, 0, 0, 0.2);
-    min-width: 160px;
-    z-index: 1;
-  }
-  
-  /* Show dropdown when hovering over the dropdown link */
-  .dropdown:hover .dropdown-menu {
+    top: 50px;
+    right: 0;
+    background-color: #444; /* Dark background for dropdown */
+    border-radius: 5px; /* Rounded corners */
+    padding: 10px;
+    display: none; /* Hidden by default */
+    width: 150px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+}
+
+/* Show dropdown when the class is active */
+.dropdown-menuadmin.show {
+    display: block; /* Make dropdown visible */
+}
+
+/* Dropdown item styling */
+.dropdown-itemadmin {
+    color: #fff;
+    text-decoration: none; /* Remove underline */
+    padding: 5px 10px;
     display: block;
-  }
-  
-  /* Style each dropdown item */
-  .dropdown-item {
-    display: block;
-    padding: 8px 16px;
-    text-decoration: none;
-    color: black;
-  }
-  
-  .dropdown-item:hover {
-    background-color: #ddd;
-  }
-
-  /* Admin Sidebar styling */
-  .sidebar {
-    width:10%;
-    background-color: #f4f4f4;
-    padding: 20px;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    top: 20px;
-    height: fit-content;
+    transition: background-color 0.3s ease;
 }
 
-.sidebar h2 {
-    margin-bottom: 15px;
+.dropdown-itemadmin:hover {
+    background-color: #555; /* Slightly lighter background on hover */
 }
 
-.sidebar ul {
-    list-style: none;
-    padding: 0;
+/* Welcome message */
+.dropdown-menuadmin p {
+    color: #fff;
+    margin: 5px 0;
+    font-size: 14px;
 }
 
-.sidebar ul li {
-    margin: 10px 0;
+/* Logout button inside dropdown */
+.dropdown-menuadmin button {
+    background-color: transparent;
+    color: #fff;
+    border: 1px solid #fff; /* Add a subtle border */
+    padding: 5px 10px;
+    cursor: pointer;
+    font-size: 14px;
+    border-radius: 3px;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.sidebar ul li a {
-    text-decoration: none;
-    color: #333;
+.dropdown-menuadmin button:hover {
+    background-color: #555;
+    color: #fff;
+}
+
+/* Buttons inside the navbar */
+.nav-buttonadmin {
+    background-color: transparent;
+    color: #fff;
+    border: none;
     font-size: 16px;
-    transition: color 0.3s;
+    padding: 10px;
+    cursor: pointer;
+    transition: background-color 0.3s ease, color 0.3s ease;
 }
 
-.sidebar ul li a:hover {
-    color: #4CAF50;
+.nav-buttonadmin:hover {
+    background-color: #555; /* Add hover effect */
+    color: #fff; /* Keep text white */
 }
-  
 
-.container {
-    display: flex;
-    flex-direction: column;
-    padding: 20px;
-    margin-top: 60px;
+/* Links inside buttons */
+.nav-buttonadmin a {
+    text-decoration: none; /* Remove underline from links */
+    color: inherit; /* Inherit text color */
+    font-size: inherit; /* Inherit font size */
+}
+
+/* Ensure links fill the button area */
+.nav-buttonadmin a:hover {
+    text-decoration: none;
+}
+
+/* Add spacing for mobile responsiveness */
+.nav-container > div {
+    margin: 0;
 }

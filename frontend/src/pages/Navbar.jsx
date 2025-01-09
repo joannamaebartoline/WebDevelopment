@@ -2,7 +2,7 @@ import React, {useState, useEffect} from "react";
 import { Link, useNavigate } from "react-router-dom";
 import cartIcon from "../assets/cart-icon.png";
 import accountIcon from "../assets/account-icon.png"; 
-
+import "./navbarstyle.css";
 const Navbar = ({ onSearch }) => {
 
     const [user, setUser] = useState(null);
@@ -73,11 +73,15 @@ const Navbar = ({ onSearch }) => {
                     width: "1000px",
                 }}
             />
-
+ <button
+  className="nav-link"
+  onClick={() => navigate("/myorders")}
+>
+  My Orders
+</button>
 <div className="cart-icon-container" onClick={handleCartClick}>
                     <img src={cartIcon} alt="Cart" className="cart-icon" />
                 </div>
-
 
                 <div className="account-dropdown">
                     <img
@@ -96,7 +100,6 @@ const Navbar = ({ onSearch }) => {
                             <button onClick={handleLogout} className="dropdown-item">Logout</button>
                         )}
                     </div>
-                    <Link to="/myorders">My Orders</Link>
                 </div>
             </div>
     </nav>

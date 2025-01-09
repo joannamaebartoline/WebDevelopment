@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import ProductModal from "../pages/ProductModal"; // Import the updated modal component
 import Navbar from "../pages/Navbar";
-import './navbarstyle.css';
+import './homestyle.css';
 import { useNavigate } from "react-router-dom";
 
 
@@ -82,10 +82,12 @@ const navigate = useNavigate();
             ...product,
             quantity,
         };
+
+        const totalAmount = checkoutProduct.price * checkoutProduct.quantity;
     
         localStorage.setItem(`buyNow_${userKey}`, JSON.stringify([checkoutProduct]));
     
-        navigate("/checkout", { state: { checkoutItems: [checkoutProduct] } });
+        navigate("/checkout", { state: { checkoutItems: [checkoutProduct], totalAmount } });
     };
     
     
@@ -163,11 +165,16 @@ const isUserLoggedIn = localStorage.getItem("user");
 >
     View Details
 </button>
-                             {/* Add to Cart Button */}
-                             <button onClick={() => handleAddToCart(product, 1)}> 
-                                Add to Cart
-                            </button>
-                            <button onClick={() => handleBuyNow(product, 1)}>Buy Now</button> 
+<div className="button-container">
+                             <button className="add-to-cart-btn" onClick={() => handleAddToCart(product, 1)}> 
+                             <img 
+                src={require("../assets/add-to-cart-icon.png")} // Adjust the path based on your project structure
+                alt="Add to Cart"
+                className="cart-icon-img"
+            />
+                            </button >
+                            <button className="buy-now-btn" onClick={() => handleBuyNow(product, 1)}>Buy Now</button> 
+                        </div>
                         </div>
                     ))}
                 </div>

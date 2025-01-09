@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import axios from "axios";
 import { Link } from "react-router-dom";
 import AdminNavbar from "./AdminNavbar"; 
+import "./productsstyle.css" 
 
 const Products = () => {
     const [products, setProducts] = useState([]);

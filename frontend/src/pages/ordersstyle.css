@@ -52,27 +52,33 @@
     letter-spacing: 0.5px; /* Adds a bit of space between letters */
 }
 
-/* Items list style */
-.order-details ul {
-    padding-left: 20px;
-    margin-bottom: 10px;
-    list-style-type: disc; /* Adds bullet points for clarity */
+/* New style for items display */
+.order-items-container {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-bottom: 15px;
 }
 
-.order-details li {
-    font-size: 1rem;
-    color: #555;
-    margin-bottom: 8px;
+/* Item details (name, price, quantity) */
+.order-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 10px;
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
 }
 
-/* Total amount at the bottom right */
-.order-total-amount {
+.order-item-title {
     font-size: 1.1rem;
-    font-weight: 700; /* Stronger weight for emphasis */
-    color: #333;
-    position: absolute;
-    bottom: 20px;
-    right: 20px;
+    color: #34495e;
+}
+
+.order-item-price,
+.order-item-quantity {
+    font-size: 1rem;
+    color: #7f8c8d;
 }
 
 /* Button style */
@@ -96,6 +102,31 @@
 }
 
 .order-received-button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+}
+
+/* Button style - Cancel Order */
+.order-cancel-button {
+    background-color: #f44336; 
+    color: white;
+    font-size: 1rem;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    margin-top: 10px;
+    position: absolute;
+    bottom: 20px;
+    right: 20px; 
+    transition: all 0.3s ease;
+}
+
+.order-cancel-button:hover {
+    background-color: #d32f2f; 
+}
+
+.order-cancel-button:disabled {
     background-color: #ccc;
     cursor: not-allowed;
 }
@@ -129,9 +160,105 @@
         font-size: 1.2rem;
     }
 
+    .order-items-container {
+        justify-content: center;
+    }
+
+    .order-item {
+        width: 100%;
+    }
+
     /* Adjust the spacing of the order details to make it fit better on mobile */
     .order-status,
     .order-total-amount {
         margin-bottom: 10px;
     }
+}
+
+/* Modal style */
+.cancel-modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.modal-content {
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    width: 400px;
+    text-align: center;
+}
+
+.cancel-reason-select {
+    width: 100%;
+    padding: 10px;
+    margin: 10px 0;
+}
+
+.cancel-reason-textarea {
+    width: 100%;
+    height: 80px;
+    margin-top: 10px;
+    padding: 10px;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: space-between;
+    margin-top: 20px;
+}
+
+.cancel-submit-button,
+.cancel-close-button {
+    padding: 10px 15px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.cancel-submit-button {
+    background-color: green;
+    color: white;
+}
+
+.cancel-close-button {
+    background-color: red;
+    color: white;
+}
+
+.rating-stars {
+    font-size: 30px;
+    cursor: pointer;
+}
+
+.star {
+    color: gray;
+}
+
+.star.selected {
+    color: gold;
+}
+
+.rating-modal .modal-content {
+    background-color: white;
+    padding: 20px;
+    text-align: center;
+    width: 300px;
+    margin: auto;
+}
+
+.modal-actions {
+    margin-top: 20px;
+}
+
+.rating-submit-button, .rating-close-button {
+    margin: 10px;
+    padding: 10px;
 }

@@ -61,7 +61,7 @@ const AllOrders = () => {
         <div className="all-orders-container">
             
             <h1>All Orders</h1>
-            {["Pending", "Shipped", "Delivered", "Cancelled"].map((status) => (
+            {["Pending", "Shipped", "Delivered", "Cancelled", "Received"].map((status) => (
                 <div key={status} className="orders-section">
                     <h2>{status} Orders</h2>
                     {groupedOrders[status] && groupedOrders[status].length > 0 ? (
@@ -75,15 +75,17 @@ const AllOrders = () => {
                                     <p><strong>User Address:</strong> {order.userAddress}</p>
                                     <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
                                     <p><strong>Status:</strong> {order.status}</p>
-                                    <select 
-                                        onChange={(e) => handleUpdateStatus(order.orderID, e.target.value)} 
-                                        value={order.status}
-                                    >
-                                        <option value="Pending">Pending</option>
-                                        <option value="Shipped">Shipped</option>
-                                        <option value="Delivered">Delivered</option>
-                                        <option value="Cancelled">Cancelled</option>
-                                    </select>
+                                    {order.status !== "Received" && (
+                                        <select 
+                                            onChange={(e) => handleUpdateStatus(order.orderID, e.target.value)} 
+                                            value={order.status}
+                                        >
+                                            <option value="Pending">Pending</option>
+                                            <option value="Shipped">Shipped</option>
+                                            <option value="Delivered">Delivered</option>
+                                            <option value="Cancelled">Cancelled</option>
+                                        </select>
+                                    )}
 
                                     {/* Display ordered products */}
                                     <h3>Ordered Products:</h3>
