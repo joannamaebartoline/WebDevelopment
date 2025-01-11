@@ -59,6 +59,186 @@ app.post('/upload', upload.single('file'), (req, res) => {
     res.status(200).json({ filePath: `/uploads/${file.filename}` });
 });
 
+// Add to Cart Endpoint
+app.post("/cart", (req, res) => {
+    const { userID, productID, quantity } = req.body;
+
+    if (!userID || !productID || !quantity) {
+        console.error("Missing required fields:", { userID, productID, quantity });
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const query = `SELECT * FROM cart WHERE userID = ? AND productID = ?`;
+    db.query(query, [userID, productID], (err, results) => {
+        if (err) {
+            console.error("Error querying the database:", err);
+            return res.status(500).json({ error: "Database query error" });
+        }
+
+        if (results.length > 0) {
+            const updateQuery = `
+                UPDATE cart 
+                SET quantity = quantity + ?
+                WHERE userID = ? AND productID = ?
+            `;
+            db.query(updateQuery, [quantity, userID, productID], (err) => {
+                if (err) {
+                    console.error("Error updating cart:", err);
+                    return res.status(500).json({ error: "Failed to update cart" });
+                }
+                res.status(200).json({ message: "Cart updated successfully!" });
+            });
+        } else {
+            const insertQuery = `
+                INSERT INTO cart (userID, productID, quantity)
+                VALUES (?, ?, ?)
+            `;
+            db.query(insertQuery, [userID, productID, quantity], (err) => {
+                if (err) {
+                    console.error("Error inserting into cart:", err);
+                    return res.status(500).json({ error: "Failed to add to cart" });
+                }
+                res.status(200).json({ message: "Product added to cart!" });
+            });
+        }
+    });
+});
+
+// Example Route to Get Cart Items
+app.get("/cart/:userID", (req, res) => {
+    const { userID } = req.params;
+    const query = `
+        SELECT cart.*, products.title, products.price, products.images 
+        FROM cart 
+        JOIN products ON cart.productID = products.productID
+        WHERE cart.userID = ?
+    `;
+    db.query(query, [userID], (err, results) => {
+        if (err) {
+            console.error("Error fetching cart items:", err);
+            return res.status(500).json({ error: "Failed to fetch cart items" });
+        }
+        res.status(200).json({ cartItems: results });
+    });
+});
+
+// Update product quantity in the cart
+app.put("/cart", (req, res) => {
+    const { userID, productID, quantity } = req.body;
+
+    if (!userID || !productID || quantity < 1) {
+        console.error("Missing required fields or invalid quantity:", { userID, productID, quantity });
+        return res.status(400).json({ error: "Invalid input or quantity" });
+    }
+
+    const query = `SELECT * FROM cart WHERE userID = ? AND productID = ?`;
+    db.query(query, [userID, productID], (err, results) => {
+        if (err) {
+            console.error("Error querying the database:", err);
+            return res.status(500).json({ error: "Database query error" });
+        }
+
+        if (results.length > 0) {
+            // If the product exists in the cart, update the quantity
+            const updateQuery = `
+                UPDATE cart 
+                SET quantity = ?
+                WHERE userID = ? AND productID = ?
+            `;
+            db.query(updateQuery, [quantity, userID, productID], (err) => {
+                if (err) {
+                    console.error("Error updating cart:", err);
+                    return res.status(500).json({ error: "Failed to update cart" });
+                }
+                res.status(200).json({ message: "Cart updated successfully!" });
+            });
+        } else {
+            // If the product does not exist, insert a new record
+            const insertQuery = `
+                INSERT INTO cart (userID, productID, quantity)
+                VALUES (?, ?, ?)
+            `;
+            db.query(insertQuery, [userID, productID, quantity], (err) => {
+                if (err) {
+                    console.error("Error inserting into cart:", err);
+                    return res.status(500).json({ error: "Failed to add to cart" });
+                }
+                res.status(200).json({ message: "Product added to cart!" });
+            });
+        }
+    });
+});
+
+// Remove product from the cart
+app.delete("/cart", (req, res) => {
+    const { userID, productID } = req.body;
+
+    if (!userID || !productID) {
+        console.error("Missing required fields:", { userID, productID });
+        return res.status(400).json({ error: "Missing required fields" });
+    }
+
+    const query = `SELECT * FROM cart WHERE userID = ? AND productID = ?`;
+    db.query(query, [userID, productID], (err, results) => {
+        if (err) {
+            console.error("Error querying the database:", err);
+            return res.status(500).json({ error: "Database query error" });
+        }
+
+        if (results.length === 0) {
+            return res.status(404).json({ error: "Product not found in cart" });
+        }
+
+        // Remove product from the cart
+        const deleteQuery = `DELETE FROM cart WHERE userID = ? AND productID = ?`;
+        db.query(deleteQuery, [userID, productID], (err) => {
+            if (err) {
+                console.error("Error removing product from cart:", err);
+                return res.status(500).json({ error: "Failed to remove product from cart" });
+            }
+            res.status(200).json({ message: "Product removed from cart" });
+        });
+    });
+});
+
+
+app.post('/ratings', async (req, res) => {
+    const { productID, userID, rating, comment } = req.body;
+
+    // Validate the rating
+    if (!rating || rating < 1 || rating > 5) {
+        return res.status(400).json({ error: 'Invalid rating. Rating should be between 1 and 5.' });
+    }
+
+    try {
+        // Insert the rating into the database
+        const result = await db.query(
+            'INSERT INTO ratings (productID, userID, rating, comment) VALUES (?, ?, ?, ?)',
+            [productID, userID, rating, comment]
+        );
+
+        res.status(201).json({ message: 'Rating submitted successfully', ratingID: result.insertId });
+    } catch (error) {
+        console.error('Error submitting rating:', error);
+        res.status(500).json({ error: 'Failed to submit rating' });
+    }
+});
+
+app.get("/ratings/:productID", (req, res) => {
+    const productID = req.params.productID;
+    const query = `
+        SELECT AVG(rating) AS averageRating, COUNT(*) AS totalRatings 
+        FROM ratings 
+        WHERE productID = ?
+    `;
+    db.query(query, [productID], (err, results) => {
+        if (err) return res.status(500).json({ error: "Error fetching ratings." });
+        const { averageRating, totalRatings } = results[0];
+        return res.status(200).json({ averageRating: Number(averageRating || 0).toFixed(1), totalRatings });
+    });
+});
+
+
 let orders = [];
 
 app.post("/orders", (req, res) => {
@@ -155,8 +335,14 @@ app.put("/orders/:orderID", (req, res) => {
         if (result.affectedRows === 0) {
             return res.status(404).json({ message: "Order not found." });
         }
-
-        res.json({ message: "Order status updated successfully." });
+        const updatedOrderQuery = `SELECT * FROM orders WHERE orderID = ?`;
+        db.query(updatedOrderQuery, [orderID], (err, rows) => {
+            if (err) {
+                console.log("Error fetching updated order:", err);
+                return res.status(500).json({ message: "Error fetching updated order." });
+            }
+            res.json({ message: "Order status updated successfully.", order: rows[0] }); // Include updated order
+        });        
     });
 });
 

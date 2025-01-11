@@ -13,6 +13,7 @@ const Home = () => {
     const [selectedCategory, setSelectedCategory] = useState(""); 
     const [selectedPriceRange, setSelectedPriceRange] = useState(""); 
     const [categories, setCategories] = useState([]); 
+    const [ratings, setRatings] = useState({});
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -37,6 +38,25 @@ const Home = () => {
         };
         fetchCategories();
     }, []);
+
+    useEffect(() => {
+        const fetchRatings = async () => {
+            try {
+                const ratingsData = {};
+                for (const product of products) {
+                    const res = await axios.get(`http://localhost:8800/ratings/${product.productID}`);
+                    ratingsData[product.productID] = res.data;
+                }
+                setRatings(ratingsData);
+            } catch (err) {
+                console.log("Error fetching ratings:", err);
+            }
+        };
+    
+        if (products.length > 0) {
+            fetchRatings();
+        }
+    }, [products]);
     
 
     const handleViewDetails = (product) => {
@@ -49,36 +69,52 @@ const Home = () => {
         setSelectedProduct(null); // Reset the selected product
     };
 const navigate = useNavigate();
-    const handleAddToCart = (product, quantity) => {
-        const isLoggedIn = localStorage.getItem("user");
-        
 
-        if (!isLoggedIn) {
-            alert("Please log in to add items to the cart.");
-            navigate("/login");
-            return;
-        }
+const handleAddToCart = async (product, quantity) => {
+    const isLoggedIn = localStorage.getItem("user");
+    if (!isLoggedIn) {
+        alert("Please log in to add items to the cart.");
+        navigate("/login");
+        return;
+    }
 
-        const user = JSON.parse(localStorage.getItem("user"));
-        const userKey = user ? user.username : null;
+    const storedUser = JSON.parse(localStorage.getItem("user"));
+    const userID = storedUser?.user?.id;
 
-        let cart = JSON.parse(localStorage.getItem(`cart_${userKey}`)) || [];
+    if (!userID) {
+        console.error("User ID is missing from the local storage.");
+        alert("Failed to retrieve user information. Please log in again.");
+        navigate("/login");
+        return;
+    }
 
-        // Check if the product is already in the cart
-        const existingProductIndex = cart.findIndex(item => item.productID === product.productID);
-        if (existingProductIndex >= 0) {
-            // Update the quantity if product already exists
-            cart[existingProductIndex].quantity += quantity;
-        } else {
-            // Add new product to cart
-            cart.push({ ...product, quantity });
-        }
+    try {
+        await axios.post("http://localhost:8800/cart", {
+            userID,
+            productID: product.productID,
+            quantity,
+        });
 
-        localStorage.setItem(`cart_${userKey}`, JSON.stringify(cart));
-        
-        console.log("Updated Cart:", cart);
+        // Update localStorage after successful cart addition
+        const storedCartItems = JSON.parse(localStorage.getItem(`cart_${userID}`)) || [];
+        const newCartItem = {
+            productID: product.productID,
+            title: product.title,
+            price: product.price,
+            quantity,
+            images: product.images,
+        };
+        storedCartItems.push(newCartItem);
+        localStorage.setItem(`cart_${userID}`, JSON.stringify(storedCartItems));
+
         alert("Product added to cart!");
-    };
+    } catch (err) {
+        console.error("Error adding product to cart:", err);
+        alert("Failed to add product to cart. Please try again.");
+    }
+};
+
+
 
     
     const handleBuyNow = (product, quantity = 1) => {
@@ -207,6 +243,16 @@ const isUserLoggedIn = localStorage.getItem("user");
             />
             <h2>{product.title}</h2>
             <span>₱{product.price}</span>
+
+            {ratings[product.productID] ? (
+                <p>
+                    ⭐ {ratings[product.productID].averageRating} 
+                    ({ratings[product.productID].totalRatings} reviews)
+                </p>
+            ) : (
+                <p>No ratings yet</p>
+            )}
+
             <button className="details-btn"
                 onClick={() => handleViewDetails(product)}
                 onMouseEnter={(e) => (e.target.style.textDecoration = "underline")}

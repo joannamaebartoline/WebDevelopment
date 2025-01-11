@@ -12,6 +12,8 @@ const Orders = () => {
     const [showCancelModal, setShowCancelModal] = useState(false);
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [rating, setRating] = useState(0);
+    const [selectedProductID, setSelectedProductID] = useState(null);
+    const [comment, setComment] = useState("");
     const alertShown = useRef(false);
     const navigate = useNavigate();
 
@@ -28,10 +30,11 @@ const Orders = () => {
     }, [navigate]);
 
     useEffect(() => {
-        if (user) {
+        if (user) { 
             axios.get("http://localhost:8800/orders")
                 .then((response) => {
                     const userOrders = response.data.filter((order) => order.userID === user.id);
+                    console.log(userOrders);
                     setOrders(userOrders);
                 })
                 .catch((error) => {
@@ -40,8 +43,9 @@ const Orders = () => {
         }
     }, [user]);
 
-    const openRatingModal = (orderID) => {
+    const openRatingModal = (orderID, productID) => {
         setSelectedOrderID(orderID);
+        setSelectedProductID(productID);
         setShowRatingModal(true);
     };
 
@@ -51,21 +55,40 @@ const Orders = () => {
     };
 
     const submitRating = () => {
-        axios.put(`http://localhost:8800/orders/${selectedOrderID}`, {
-            status: "Received",
-            rating: rating
-        }).then(() => {
-            setOrders((prevOrders) =>
-                prevOrders.map((order) =>
-                    order.orderID === selectedOrderID ? { ...order, status: "Received" } : order
-                )
-            );
-            alert("Thank you for your feedback!");
-            closeRatingModal();
-        }).catch((error) => {
+        axios.post("http://localhost:8800/ratings", {
+            productID: selectedProductID, 
+            userID: user.id,
+            rating: rating,
+            comment: comment || "" 
+        })
+        .then(() => {
+            // Update the order status to "Received" and remove the "Order Received" button
+            axios.put(`http://localhost:8800/orders/${selectedOrderID}`, {
+                status: "Received" // Update status to "Received"
+            })
+            .then((response) => {
+                // Directly update the order status in the local state with the updated order data
+                setOrders((prevOrders) =>
+                    prevOrders.map((order) =>
+                        order.orderID === selectedOrderID
+                            ? { ...order, status: response.data.order.status }  // Use the updated status from the backend response
+                            : order
+                    )
+                );
+                alert("Thank you for your feedback!");
+                closeRatingModal();
+            })
+            .catch((error) => {
+                console.error("Error updating order status:", error);
+                alert("Failed to update order status. Please try again.");
+            });
+        })
+        .catch((error) => {
             console.error("Error submitting rating:", error);
+            alert("Failed to submit your rating. Please try again.");
         });
     };
+    
    
     const openCancelModal = (orderID) => {
         setSelectedOrderID(orderID);
@@ -116,25 +139,31 @@ const Orders = () => {
                             <p><strong>Status:</strong> {order.status}</p>
                             <h3>Items:</h3>
                             <div className="order-items-container">
-        {order.checkoutItems.map((item, index) => (
-            <div key={index} className="order-item-card">
-                <img src={`http://localhost:8800${item.images}`} alt={item.title} />
+                            {order.checkoutItems.map((item, index) => (
+    <div key={index} className="order-item-card">
+        <img src={`http://localhost:8800${item.images}`} alt={item.title} />
 
-                <p className="order-item-title">{item.title}</p>
-                <p className="order-item-price">₱{item.price.toFixed(2)}</p>
-                <p className="order-item-quantity">Quantity: {item.quantity}</p>
-            </div>
-        ))}
+        <p className="order-item-title">{item.title}</p>
+        <p className="order-item-price">
+            ₱{(item.price && !isNaN(item.price)) ? item.price.toFixed(2) : "0.00"}
+        </p>
+        <p className="order-item-quantity">Quantity: {item.quantity}</p>
     </div>
-                            <p><strong>Total Amount:</strong> ₱{order.totalAmount.toFixed(2)}</p>
-                            {order.status === "Delivered" && (
-                                <button
-                                    className="order-received-button"
-                                    onClick={() => openRatingModal(order.orderID)}
-                                >
-                                    Order Received
-                                </button>
-                            )}
+))}
+
+    </div>
+    <p><strong>Total Amount:</strong> ₱{(order.totalAmount && !isNaN(order.totalAmount)) ? order.totalAmount.toFixed(2) : "0.00"}</p>
+
+                            {order.status === "Delivered" && order.checkoutItems.map((item) => (
+    <button
+        key={item.productID}  // Make sure to set a unique key for the button
+        className="order-received-button"
+        onClick={() => openRatingModal(order.orderID, item.productID)}  // pass both orderID and productID
+    >
+        Order Received
+    </button>
+))}
+
                             {order.status === "Pending" && (
                                 <button
                                     className="order-cancel-button"
@@ -161,6 +190,11 @@ const Orders = () => {
                                 ★
                             </span>
                         ))}
+                         <textarea
+                            placeholder="Leave a comment (optional)"
+                            value={comment}
+                            onChange={(e) => setComment(e.target.value)}  
+                        />
                         <div className="modal-actions">
                             <button className="rating-submit-button" onClick={submitRating}>Submit</button>
                             <button className="rating-close-button" onClick={closeRatingModal}>Close</button>

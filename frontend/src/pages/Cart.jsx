@@ -1,62 +1,126 @@
-import React, { useState, useEffect, useMemo } from "react";
+import React, { useState, useEffect} from "react";
 import { useNavigate } from "react-router-dom"; 
 import "./cartstyle.css";
 import Navbar from "../pages/Navbar";
+import axios from "axios";
 
 const Cart = () => {
     const [cartItems, setCartItems] = useState([]);
     const [selectedItems, setSelectedItems] = useState([]);
     const navigate = useNavigate();  
     const isLoggedIn = Boolean(localStorage.getItem("user"));
-    const user = useMemo(() => {
-        try {
-            return JSON.parse(localStorage.getItem("user")) || null;
-        } catch (error) {
-            console.error("Error parsing user data:", error);
-            return null;
-        }
-    }, []);
-    const userKey = user ? user.username : null;
 
-    useEffect(() => { 
+    useEffect(() => {
         if (!isLoggedIn) {
             alert("Please log in to view your cart.");
             navigate("/login");
             return null;
         }
-
-        const fetchCart = () => {
+    
+        const fetchCart = async () => {
             try {
-                const storedCartItems = JSON.parse(localStorage.getItem(`cart_${userKey}`)) || [];
-                setCartItems(storedCartItems);
+                const storedUser = JSON.parse(localStorage.getItem("user"));
+                const userID = storedUser?.user?.id;
+                const res = await axios.get(`http://localhost:8800/cart/${userID}`);
+                setCartItems(res.data.cartItems);
+                localStorage.setItem(`cart_${userID}`, JSON.stringify(res.data.cartItems));
             } catch (err) {
                 console.error("Error fetching cart data:", err);
-                setCartItems([]); 
+                setCartItems([]); // In case of error, set an empty cart
             }
         };
+    
+        fetchCart();
+    }, [isLoggedIn, navigate]);
+    
 
-      fetchCart();
-    }, [user, userKey, isLoggedIn, navigate]);
-
-    const updateQuantity = (productID, quantity) => {
-        const updatedCart = cartItems.map((item) =>
-            item.productID === productID
-                ? { ...item, quantity: Math.max(1, quantity) }
-                : item
-        );
-        setCartItems(updatedCart);
-        localStorage.setItem(`cart_${userKey}`, JSON.stringify(updatedCart));
-    };
-
-    const removeFromCart = (productID) => {
-        if (window.confirm("Are you sure you want to remove this item?")) {
-            const updatedCart = cartItems.filter((item) => item.productID !== productID);
+    const updateQuantity = async (productID, quantity) => {
+        const isLoggedIn = localStorage.getItem("user");
+        if (!isLoggedIn) {
+            alert("Please log in to update the cart.");
+            navigate("/login");
+            return;
+        }
+    
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        const userID = storedUser?.user?.id;
+    
+        if (!userID) {
+            console.error("User ID is missing from the local storage.");
+            alert("Failed to retrieve user information. Please log in again.");
+            navigate("/login");
+            return;
+        }
+    
+        // Ensure quantity is at least 1
+        const updatedQuantity = Math.max(1, quantity);
+    
+        try {
+            // Update quantity in the database via the backend
+            await axios.put("http://localhost:8800/cart", {
+                userID,
+                productID,
+                quantity: updatedQuantity,
+            });
+    
+            // Update the local state and localStorage
+            const updatedCart = cartItems.map((item) =>
+                item.productID === productID
+                    ? { ...item, quantity: updatedQuantity }
+                    : item
+            );
             setCartItems(updatedCart);
-            localStorage.setItem(`cart_${userKey}`, JSON.stringify(updatedCart));
-            setSelectedItems(selectedItems.filter((id) => id !== productID)); 
+            localStorage.setItem(`cart_${userID}`, JSON.stringify(updatedCart));
+    
+            alert("Cart updated successfully!");
+        } catch (err) {
+            console.error("Error updating cart:", err);
+            alert("Failed to update cart. Please try again.");
         }
     };
+    
 
+    const removeFromCart = async (productID) => {
+        const isLoggedIn = localStorage.getItem("user");
+        if (!isLoggedIn) {
+            alert("Please log in to remove items from the cart.");
+            navigate("/login");
+            return;
+        }
+    
+        const storedUser = JSON.parse(localStorage.getItem("user"));
+        const userID = storedUser?.user?.id;
+    
+        if (!userID) {
+            console.error("User ID is missing from the local storage.");
+            alert("Failed to retrieve user information. Please log in again.");
+            navigate("/login");
+            return;
+        }
+    
+        if (window.confirm("Are you sure you want to remove this item?")) {
+            try {
+                // Remove item from the database via the backend
+                await axios.delete("http://localhost:8800/cart", {
+                    data: {
+                        userID,
+                        productID,
+                    },
+                });
+    
+                // Update the local state and localStorage
+                const updatedCart = cartItems.filter((item) => item.productID !== productID);
+                setCartItems(updatedCart);
+                localStorage.setItem(`cart_${userID}`, JSON.stringify(updatedCart));
+    
+                alert("Product removed from cart!");
+            } catch (err) {
+                console.error("Error removing product from cart:", err);
+                alert("Failed to remove product from cart. Please try again.");
+            }
+        }
+    };
+    
     const calculateSubtotal = (item) => item.price * item.quantity;
 
     const calculateTotal = () => {

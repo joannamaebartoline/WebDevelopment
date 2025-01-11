@@ -66,7 +66,7 @@
 
 /* Remove button styling */
 .remove-button {
-    padding: 8px 12px;
+    padding: 8px 16px; /* Adjust padding */
     background-color: #ff6b6b;
     color: white;
     border: none;
@@ -75,12 +75,19 @@
     font-size: 13px;
     font-weight: 500;
     transition: background-color 0.3s ease, transform 0.2s ease;
+    white-space: nowrap; /* Prevents the text from wrapping */
+    box-sizing: border-box; /* Include padding and border in total width */
+    width: auto; /* Allow button width to adjust based on content */
+    min-width: 100px; /* Set a minimum width for the button */
+    text-align: center; /* Center align the text */
 }
 
+/* Hover effect */
 .remove-button:hover {
     background-color: #e74c3c;
     transform: scale(1.05);
 }
+
 
 /* Checkout button styling */
 .checkout-button {

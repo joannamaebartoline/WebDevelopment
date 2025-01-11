@@ -90,16 +90,17 @@ const AllOrders = () => {
                                     {/* Display ordered products */}
                                     <h3>Ordered Products:</h3>
                                     <ul>
-                                        {order.checkoutItems.map((item) => (
-                                            <li key={item.productID}>
-                                                <p>{item.title}</p>
-                                                <p>₱{item.price.toFixed(2)}</p>
-                                                <p>Quantity: {item.quantity}</p>
-                                                <p>Subtotal: ₱{(item.price * item.quantity).toFixed(2)}</p>
-                                            </li>
-                                        ))}
+                                    {order.checkoutItems.map((item) => (
+    <li key={item.productID}>
+        <p>{item.title}</p>
+        <p>₱{(item.price ? item.price.toFixed(2) : "0.00")}</p> {/* Check if price is valid */}
+        <p>Quantity: {item.quantity}</p>
+        <p>Subtotal: ₱{(item.price * item.quantity ? (item.price * item.quantity).toFixed(2) : "0.00")}</p> {/* Check if price * quantity is valid */}
+    </li>
+))}
+
                                     </ul>
-                                    <p><strong>Order Total Amount:</strong> ₱{order.totalAmount.toFixed(2)}</p>
+                                    <p><strong>Order Total Amount:</strong> ₱{(order.totalAmount ? order.totalAmount.toFixed(2) : "0.00")}</p> {/* Check if totalAmount is valid */}
                                 </div>
                             ))}
                         </div>
