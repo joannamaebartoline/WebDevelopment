@@ -70,7 +70,10 @@ const CheckoutPage = () => {
             userID: userData.user.id, 
             userName: userData.user.username,
             userAddress: userData.user.address,
-            checkoutItems,
+            checkoutItems: checkoutItems.map(item => ({
+                ...item,
+                images: item.images
+            })),
             totalAmount,
             paymentMethod,
             status: "Pending"

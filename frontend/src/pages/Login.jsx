@@ -15,6 +15,7 @@ const Login = () => {
         e.preventDefault();
         try {
             const res = await axios.post("http://localhost:8800/login", formData);
+            console.log("Response Data:", res.data);
             localStorage.setItem("user", JSON.stringify(res.data)); // Save user data
             navigate("/customer"); // Navigate to user dashboard
         } catch (err) {

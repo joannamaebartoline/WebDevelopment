@@ -59,25 +59,6 @@ app.post('/upload', upload.single('file'), (req, res) => {
     res.status(200).json({ filePath: `/uploads/${file.filename}` });
 });
 
-app.put("/products/:productID/rating", async (req, res) => {
-    const { productID } = req.params;
-    const { rating } = req.body;
-
-    try {
-        const product = await db.getProductById(productID);
-        const newAverageRating = ((product.rating * product.ratingCount) + rating) / (product.ratingCount + 1);
-
-        await db.updateProductRating(productID, {
-            rating: newAverageRating,
-            ratingCount: product.ratingCount + 1
-        });
-
-        res.status(200).send("Rating updated successfully");
-    } catch (error) {
-        res.status(500).send("Error updating rating");
-    }
-});
-
 let orders = [];
 
 app.post("/orders", (req, res) => {
@@ -94,9 +75,9 @@ app.post("/orders", (req, res) => {
         const orderID = result.insertId;
 
         checkoutItems.forEach(item => {
-            const itemQuery = `INSERT INTO order_items (orderID, productID, title, price, quantity) VALUES (?, ?, ?, ?, ?)`;
+            const itemQuery = `INSERT INTO order_items (orderID, productID, title, price, quantity, images) VALUES (?, ?, ?, ?, ?,?)`;
 
-            db.query(itemQuery, [orderID, item.productID, item.title, item.price, item.quantity], (err) => {
+            db.query(itemQuery, [orderID, item.productID, item.title, item.price, item.quantity, item.images], (err) => {
                 if (err) {
                     console.log("Error inserting order item:", err);
                     return res.status(500).json({ message: "Error adding order items." });
@@ -111,7 +92,7 @@ app.post("/orders", (req, res) => {
 app.get("/orders", (req, res) => {
     const query = `
     SELECT orders.orderID, orders.userID, orders.userName, orders.userAddress, orders.paymentMethod, orders.status, orders.totalAmount, orders.orderDate,
-           order_items.productID, order_items.title, order_items.price, order_items.quantity
+           order_items.productID, order_items.title, order_items.price, order_items.quantity, order_items.images
     FROM orders
     LEFT JOIN order_items ON orders.orderID = order_items.orderID
     `;
@@ -143,7 +124,8 @@ app.get("/orders", (req, res) => {
                 productID: row.productID,
                 title: row.title,
                 price: row.price,
-                quantity: row.quantity
+                quantity: row.quantity,
+                images: row.images
             });
             return acc;
         }, []);
@@ -272,19 +254,19 @@ app.post('/adminlogin', (req, res) => {
 
 // Add product
 app.post("/products", (req, res) => {
-    const { title, description, price, images, category } = req.body;
+    const { title, description, price, images, categoryID, stock } = req.body;
 
     // Basic validation
-    if (!title || !description || !price || !category) {
-        return res.status(400).json("All fields are required.");
+    if (!title || !description || !price || !categoryID || stock === undefined) {
+        return res.status(400).json("All fields are required, including stock.");
     }
 
     if (isNaN(price) || price <= 0) {
         return res.status(400).json("Price must be a valid positive number.");
     }
 
-    const q = "INSERT INTO products (`title`, `description`, `price`, `images`, `category`) VALUES (?)";
-    const values = [title, description, price, images, category];
+    const q = "INSERT INTO products (`title`, `description`, `price`, `images`, `categoryID`, `stock`) VALUES (?)";
+    const values = [title, description, price, images, categoryID, stock];
 
     db.query(q, [values], (err) => {
         if (err) {
@@ -294,24 +276,48 @@ app.post("/products", (req, res) => {
         res.status(201).json("Product has been added successfully.");
     });
 });
-app.get('/products/category/:category', (req, res) => {
-    const { category } = req.params;
 
-    const q = "SELECT * FROM products WHERE category = ?";
-    db.query(q, [category], (err, data) => {
+app.get("/products", (req, res) => {
+    const q = `SELECT p.*, c.name AS categoryName,
+                      CASE WHEN p.stock <= 5 THEN 'Low Stock' ELSE 'In Stock' END AS stockStatus
+               FROM products p
+               JOIN categories c ON p.categoryID = c.categoryID`;
+
+    db.query(q, (err, data) => {
         if (err) {
-            console.log("Error fetching products by category:", err);
-            return res.status(500).json(err);
+            console.error("Error fetching products:", err);
+            return res.status(500).json("Error fetching products");
         }
         res.status(200).json(data);
     });
 });
+
+app.get('/categories', (req, res) => {
+    const q = "SELECT * FROM categories"; // Fetch all categories
+    db.query(q, (err, data) => {
+        if (err) {
+            console.log("Error fetching categories:", err);
+            return res.status(500).json(err);
+        }
+        res.status(200).json(data); // Return all categories
+    });
+});
+
+app.get("/products/low-stock", (req, res) => {
+    const q = "SELECT * FROM products WHERE stock < 5"; // Threshold for low stock
+    db.query(q, (err, data) => {
+        if (err) return res.status(500).json(err);
+        res.status(200).json(data);
+    });
+});
+
+
 // Update product
 app.put("/products/:id", (req, res) => {
     const productID = req.params.id;
-    const { title, description, price, images, category } = req.body;
+    const { title, description, price, images, categoryID, stock } = req.body;
 
-    if (!title || !description || !price || !category) {
+    if (!title || !description || !price || !categoryID || stock === undefined) {
         return res.status(400).json("All fields are required.");
     }
 
@@ -319,8 +325,8 @@ app.put("/products/:id", (req, res) => {
         return res.status(400).json("Price must be a valid positive number.");
     }
 
-    const q = "UPDATE products SET `title` = ?, `description` = ?, `price` = ?, `images` = ?, `category` = ? WHERE productID = ?";
-    const values = [title, description, price, images, category];
+    const q = "UPDATE products SET `title` = ?, `description` = ?, `price` = ?, `images` = ?, `categoryID` = ?, `stock` = ? WHERE productID = ?";
+    const values = [title, description, price, images, categoryID, stock];
 
     db.query(q, [...values, productID], (err) => {
         if (err) {

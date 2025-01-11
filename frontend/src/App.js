@@ -13,7 +13,6 @@ import Login from "./pages/Login";
 import Signup from "./pages/Signup";
 import AdminLogin from "./pages/AdminLogin";
 import Orders from "./pages/Orders";
-import "./style.css";
 
 const App = () => {
 

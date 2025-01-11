@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import axios from "axios";
 import { useParams, useNavigate } from "react-router-dom";
+import "./updatestyle.css"
 
 const Update = () => {
     const { id } = useParams(); // Get product ID from URL params
@@ -10,13 +11,23 @@ const Update = () => {
         title: "",
         description: "",
         price: "",
-        category: "",
+        categoryID: "",
         images: "",
+        stock: "",
     });
 
     const [file, setFile] = useState(null); // Track the uploaded file
+    const [categories, setCategories] = useState([]);
 
     useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get("http://localhost:8800/categories");
+                setCategories(res.data);  // Set the categories fetched from the backend
+            } catch (err) {
+                console.log("Error fetching categories:", err);
+            }
+        };
         const fetchProduct = async () => {
             try {
                 const res = await axios.get(`http://localhost:8800/products/${id}`);
@@ -27,6 +38,7 @@ const Update = () => {
                 console.log("Error fetching product:", err);
             }
         };
+        fetchCategories();
         fetchProduct();
     }, [id]);
 
@@ -98,23 +110,29 @@ const Update = () => {
                     placeholder="Enter product price"
                 />
 
-                <label>Category</label>
+<label>Category</label>
                 <select
-                    name="category"
-                    value={product.category}
+                    name="categoryID"
+                    value={product.categoryID}
                     onChange={handleChange}
                 >
                     <option value="">Select Category</option>
-                    <option value="Face products">Face products</option>
-                    <option value="Eye products">Eye products</option>
-                    <option value="Lip products">Lip products</option>
-                    <option value="Nail products">Nail products</option>
-                    <option value="Skincare essentials">Skincare essentials</option>
-                    <option value="Tools and Accessories">Tools and accessories</option>
-                    <option value="Body products">Body products</option>
-                    <option value="Hair products">Hair products</option>
-                    <option value="Fragrances">Fragrances</option>
+                    {categories.map((category) => (
+                        <option key={category.categoryID} value={category.categoryID}>
+                            {category.name}
+                        </option>
+                    ))}
                 </select>
+
+                <label>Stock</label>
+                <input
+                    type="number"
+                    name="stock"
+                    value={product.stock}
+                    onChange={handleChange}
+                    placeholder="Enter product stock"
+                />
+
 
                 {/* Image input */}
                 <label>Upload New Image (Optional)</label>

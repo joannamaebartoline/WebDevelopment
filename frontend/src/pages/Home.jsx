@@ -10,6 +10,9 @@ const Home = () => {
     const [products, setProducts] = useState([]);
     const [selectedProduct, setSelectedProduct] = useState(null); // Track the selected product
     const [isModalOpen, setIsModalOpen] = useState(false); // Track modal visibility
+    const [selectedCategory, setSelectedCategory] = useState(""); 
+    const [selectedPriceRange, setSelectedPriceRange] = useState(""); 
+    const [categories, setCategories] = useState([]); 
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -22,6 +25,19 @@ const Home = () => {
         };
         fetchProducts();
     }, []);
+
+    useEffect(() => {
+        const fetchCategories = async () => {
+            try {
+                const res = await axios.get("http://localhost:8800/categories");
+                setCategories(res.data); // Store categories in state
+            } catch (err) {
+                console.log("Error fetching categories:", err);
+            }
+        };
+        fetchCategories();
+    }, []);
+    
 
     const handleViewDetails = (product) => {
         setSelectedProduct(product); // Set the clicked product
@@ -58,7 +74,6 @@ const navigate = useNavigate();
             cart.push({ ...product, quantity });
         }
 
-        // Save updated cart to localStorage
         localStorage.setItem(`cart_${userKey}`, JSON.stringify(cart));
         
         console.log("Updated Cart:", cart);
@@ -91,7 +106,39 @@ const navigate = useNavigate();
     };
     
     
-
+    const filterByPriceRange = (price) => {
+        if (!selectedPriceRange) return true; 
+    
+        const priceRanges = {
+            under500: 500,
+            "500-1000": [500, 1000],
+            "1000-5000": [1000, 5000],
+            "5000plus": 5000,
+        };
+    
+        const range = priceRanges[selectedPriceRange];
+    
+        if (Array.isArray(range)) {
+            return price >= range[0] && price <= range[1];
+        } else if (selectedPriceRange === "under500") {
+            return price < range;
+        } else if (selectedPriceRange === "5000plus") {
+            return price >= range;
+        }
+    
+        return true;
+    };
+    
+    const filteredProducts = products.filter((product) => {
+        const isCategoryMatch = selectedCategory
+            ? product.categoryID === parseInt(selectedCategory)
+            : true;
+    
+        const isPriceMatch = filterByPriceRange(product.price);
+    
+        return isCategoryMatch && isPriceMatch;
+    });
+    
 const isUserLoggedIn = localStorage.getItem("user");
     return (
         <>
@@ -120,64 +167,75 @@ const isUserLoggedIn = localStorage.getItem("user");
                 </section>
             )}
 
+<div className="filters">
+    {/* Category Filter */}
+    <select
+        value={selectedCategory}
+        onChange={(e) => setSelectedCategory(e.target.value)}
+    >
+        <option value="">All Categories</option>
+        {categories.map((cat) => (
+            <option key={cat.categoryID} value={cat.categoryID}>
+                {cat.name}
+            </option>
+        ))}
+    </select>
+
+    {/* Price Range Filter */}
+    <select
+        value={selectedPriceRange}
+        onChange={(e) => setSelectedPriceRange(e.target.value)}
+    >
+        <option value="">All Prices</option>
+        <option value="under500">Under ₱500</option>
+        <option value="500-1000">₱500 - ₱1000</option>
+        <option value="1000-5000">₱1000 - ₱5000</option>
+        <option value="5000plus">₱5000 and above</option>
+    </select>
+</div>
+
+
             <div className="home-page">
                 <h1>Our Products</h1>
                 <div id="home-cont" className="home-content">
                 <div className="product-cards">
-                    {products.map((product) => (
-                        <div className="product-card" key={product.productID}>
-                            <img
-                                src={`http://localhost:8800${product.images}`}
-                                alt={product.title}
-                            />
-                            <h2>{product.title}</h2>
-                            <span>₱{product.price}</span>
-
-                            {/* Display product rating */}
-                            <div className="product-rating">
-                                {product.rating ? (
-                                    <>
-                                        <span>{product.rating}</span> 
-                                        {/* Optional: Display stars for the rating */}
-                                        <div className="stars">
-                                            {[...Array(5)].map((_, index) => (
-                                                <span key={index} className={index < product.rating ? "filled" : "empty"}>★</span>
-                                            ))}
-                                        </div>
-                                    </>
-                                ) : (
-                                    <span>No ratings yet</span>
-                                )}
-                            </div>
-
-                            <button 
-    onClick={() => handleViewDetails(product)} 
-    style={{
-        background: "none",
-        border: "none",
-        color: "green",
-        cursor: "pointer",
-        padding: "0",
-        textDecoration: "none", 
-    }}
-    onMouseEnter={(e) => e.target.style.textDecoration = "underline"}
-    onMouseLeave={(e) => e.target.style.textDecoration = "none"}
->
-    View Details
-</button>
-<div className="button-container">
-                             <button className="add-to-cart-btn" onClick={() => handleAddToCart(product, 1)}> 
-                             <img 
-                src={require("../assets/add-to-cart-icon.png")} // Adjust the path based on your project structure
-                alt="Add to Cart"
-                className="cart-icon-img"
+    {filteredProducts.map((product) => (
+        <div className="product-card" key={product.productID}>
+            <img
+                src={`http://localhost:8800${product.images}`}
+                alt={product.title}
             />
-                            </button >
-                            <button className="buy-now-btn" onClick={() => handleBuyNow(product, 1)}>Buy Now</button> 
-                        </div>
-                        </div>
-                    ))}
-                </div>
+            <h2>{product.title}</h2>
+            <span>₱{product.price}</span>
+            <button className="details-btn"
+                onClick={() => handleViewDetails(product)}
+                onMouseEnter={(e) => (e.target.style.textDecoration = "underline")}
+                onMouseLeave={(e) => (e.target.style.textDecoration = "none")}
+            >
+                View Details
+            </button>
+            <div className="button-container">
+                <button
+                    className="add-to-cart-btn"
+                    onClick={() => handleAddToCart(product, 1)}
+                >
+                    <img
+                        src={require("../assets/add-to-cart-icon.png")}
+                        alt="Add to Cart"
+                        className="cart-icon-img"
+                    />
+                </button>
+                <button
+                    className="buy-now-btn"
+                    onClick={() => handleBuyNow(product, 1)}
+                >
+                    Buy Now
+                </button>
+            </div>
+        </div>
+    ))}
+</div>
+
             </div>
             </div>
 

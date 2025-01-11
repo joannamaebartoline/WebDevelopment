@@ -17,7 +17,7 @@
 .navbar-container {
     display: flex;
     align-items: center;
-    width: 100%;
+    justify-content: flex-start;
 }
 
 /* Navbar Button Styling (Home, My Orders, etc.) */
@@ -25,36 +25,16 @@
     color: white;
     text-decoration: none;
     font-size: 16px;
-    margin-right: 20px;
-    padding: 10px 15px;
     cursor: pointer;
     background: none;
     border: none;
     border-radius: 5px; /* Optional: Add slight rounding for better UI */
     transition: background-color 0.3s ease, color 0.3s ease;
-    margin-left: 30px;
 }
 
 .nav-link:hover {
     text-decoration: none;
-    background-color: #444; /* Highlight on hover */
-    color: #ff4500; /* Change text color on hover */
-}
-
-/* Search Bar Styling */
-input[type="text"] {
-    padding: 8px 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    width: 70%;
-    font-size: 14px;
-    outline: none;
-    margin-right: 20px;
-}
-
-input[type="text"]:focus {
-    border-color: #ff4500; /* Highlight border on focus */
-    box-shadow: 0 0 5px rgba(255, 69, 0, 0.5);
+    background-color: transparent; /* Highlight on hover */
 }
 
 /* Cart Icon Styling */
@@ -69,6 +49,7 @@ input[type="text"]:focus {
     filter: brightness(0) invert(1); /* Make the icon white */
     transition: transform 0.2s ease-in-out;
     margin-left: 20px;
+    margin-top: 10px;
 }
 
 .cart-icon:hover {
@@ -89,6 +70,7 @@ input[type="text"]:focus {
     vertical-align: middle;
     display: inline-block;
     margin-left: 20px;
+    margin-top: 10px;
 }
 
 .account-icon:hover {
@@ -142,21 +124,26 @@ input[type="text"]:focus {
     text-decoration: underline;
 }
 
-/* My Orders Button */
-.nav-link {
-    display: inline-block;
-    font-size: 16px;
-    margin-right: 20px;
-    padding: 10px 15px;
-    color: white;
-    background: none;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+.searchbar input[type="text"] {
+    width: 300px;
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    font-size: 14px;
+    transition: all 0.3s ease-in-out;
+    margin-left: 15px;
+    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
+    margin-top: 5px;
 }
 
-.nav-link:hover {
-    background-color: #444;
-    color: #ff4500;
+.searchbar input[type="text"]:focus {
+    border-color: #ff4500;
+    box-shadow: 0px 4px 8px rgba(255, 69, 0, 0.3);
+    background-color: #fef9f9;
+}
+
+.searchbar input[type="text"]::placeholder {
+    color: #aaa;
+    font-style: italic;
 }

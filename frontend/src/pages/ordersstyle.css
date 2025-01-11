@@ -1,264 +1,212 @@
-/* General container style */
+/* ordersstyle.css */
+
+/* Container for the orders page */
 .orders-container {
-    width: 60%; /* Reduced width for a more compact look */
-    margin: 20px auto;
     padding: 20px;
-    background-color: #f4f4f4;
-    border-radius: 8px;
-    margin-top: 50px;
+    max-width: 1200px;
+    margin: 0 auto;
+    font-family: Arial, sans-serif;
 }
 
-/* Heading style */
+/* Heading for the orders page */
 .orders-container h1 {
     text-align: center;
-    color: #333;
-    font-size: 2rem; /* Slightly smaller heading font */
+    font-size: 32px;
     margin-bottom: 20px;
+    color: #333;
 }
 
-/* Individual order container */
+/* If no orders, show this message */
+.orders-container p {
+    font-size: 18px;
+    color: #666;
+}
+
+/* Styles for the order details */
 .order-details {
     background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-    margin-bottom: 20px;
     padding: 20px;
-    display: flex;
-    flex-direction: column;
-    justify-content: flex-start; /* Aligns content to the top */
-    position: relative;
-    transition: all 0.3s ease;
+    margin-bottom: 20px;
+    border-radius: 8px;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.order-details:hover {
-    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+/* Order status label */
+.order-details p strong {
+    font-weight: bold;
 }
 
-/* Order status at the top left */
-.order-status {
-    font-size: 1rem;
-    font-weight: 600; /* Stronger weight for emphasis */
-    color: #555;
-    margin-bottom: 15px; /* Adds space between status and content */
-}
-
-/* Title and order info */
-.order-details h3 {
-    font-size: 1.3rem;
-    font-weight: 600;
-    color: #333;
-    margin-bottom: 12px;
-    text-transform: uppercase;
-    letter-spacing: 0.5px; /* Adds a bit of space between letters */
-}
-
-/* New style for items display */
+/* Order items section */
 .order-items-container {
     display: flex;
-    flex-direction: column;
-    gap: 10px;
-    margin-bottom: 15px;
+    flex-wrap: wrap;
+    gap: 15px;
+    margin-bottom: 20px;
 }
 
-/* Item details (name, price, quantity) */
-.order-item {
-    display: flex;
-    justify-content: space-between;
-    padding: 10px;
-    background-color: #fff;
+/* Individual order item card */
+.order-item-card {
+    width: 220px;
+    background-color: #f9f9f9;
+    padding: 15px;
     border-radius: 8px;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    text-align: center;
 }
 
+/* Order item image styling */
+.order-item-card img {
+    width: 100%;
+    height: 150px;
+    object-fit: contain;
+    margin-bottom: 10px;
+    border-radius: 8px;
+}
+
+/* Order item title */
 .order-item-title {
-    font-size: 1.1rem;
-    color: #34495e;
+    font-size: 18px;
+    font-weight: bold;
+    color: #333;
+    margin-bottom: 5px;
 }
 
-.order-item-price,
+/* Order item price */
+.order-item-price {
+    font-size: 16px;
+    color: #333;
+    margin-bottom: 5px;
+}
+
+/* Order item quantity */
 .order-item-quantity {
-    font-size: 1rem;
-    color: #7f8c8d;
+    font-size: 14px;
+    color: #777;
 }
 
-/* Button style */
-.order-received-button {
+/* Total amount styling */
+.order-details p:last-child {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    color: #333;
+}
+
+/* Buttons for actions like cancel or rate */
+.order-received-button,
+.order-cancel-button {
     background-color: #4CAF50;
     color: white;
-    font-size: 1rem;
     padding: 10px 20px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
-    margin-top: 10px;
-    position: absolute;
-    bottom: 20px;
-    right: 110px;
-    transition: all 0.3s ease;
+    margin-right: 10px;
+    font-size: 16px;
 }
 
-.order-received-button:hover {
+.order-received-button:hover,
+.order-cancel-button:hover {
     background-color: #45a049;
 }
 
-.order-received-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-/* Button style - Cancel Order */
-.order-cancel-button {
-    background-color: #f44336; 
-    color: white;
-    font-size: 1rem;
-    padding: 10px 20px;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-    margin-top: 10px;
-    position: absolute;
-    bottom: 20px;
-    right: 20px; 
-    transition: all 0.3s ease;
-}
-
-.order-cancel-button:hover {
-    background-color: #d32f2f; 
-}
-
-.order-cancel-button:disabled {
-    background-color: #ccc;
-    cursor: not-allowed;
-}
-
-/* Empty order message */
-.orders-container p {
-    font-size: 1.2rem;
-    color: #777;
-    text-align: center;
-    margin-top: 40px;
-}
-
-/* Responsive styling */
-@media (max-width: 768px) {
-    .orders-container {
-        width: 90%; /* Adjust width for mobile devices */
-        padding: 15px;
-    }
-
-    .order-details {
-        padding: 15px;
-    }
-
-    .order-details h3 {
-        font-size: 1.2rem; /* Slightly smaller text for mobile */
-        margin-bottom: 10px;
-    }
-
-    .order-received-button {
-        width: 100%;
-        font-size: 1.2rem;
-    }
-
-    .order-items-container {
-        justify-content: center;
-    }
-
-    .order-item {
-        width: 100%;
-    }
-
-    /* Adjust the spacing of the order details to make it fit better on mobile */
-    .order-status,
-    .order-total-amount {
-        margin-bottom: 10px;
-    }
-}
-
-/* Modal style */
+/* Rating modal styles */
+.rating-modal,
 .cancel-modal {
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.5);
+    background-color: rgba(0, 0, 0, 0.5);
     display: flex;
-    justify-content: center;
     align-items: center;
+    justify-content: center;
 }
 
 .modal-content {
-    background: white;
-    padding: 20px;
-    border-radius: 10px;
+    background-color: white;
+    padding: 30px;
+    border-radius: 8px;
     width: 400px;
-    text-align: center;
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
 }
 
-.cancel-reason-select {
-    width: 100%;
-    padding: 10px;
-    margin: 10px 0;
+/* Rating modal stars */
+.star-filled,
+.star-empty {
+    cursor: pointer;
+    font-size: 24px;
+    color: gold;
 }
 
-.cancel-reason-textarea {
-    width: 100%;
-    height: 80px;
-    margin-top: 10px;
-    padding: 10px;
+.star-empty {
+    color: gray;
 }
 
+/* Modal buttons for submitting and closing */
 .modal-actions {
     display: flex;
     justify-content: space-between;
     margin-top: 20px;
 }
 
-.cancel-submit-button,
-.cancel-close-button {
-    padding: 10px 15px;
-    cursor: pointer;
+.rating-submit-button,
+.cancel-submit-button {
+    background-color: #4CAF50;
+    color: white;
+    padding: 10px 20px;
     border: none;
     border-radius: 5px;
-}
-
-.cancel-submit-button {
-    background-color: green;
-    color: white;
-}
-
-.cancel-close-button {
-    background-color: red;
-    color: white;
-}
-
-.rating-stars {
-    font-size: 30px;
     cursor: pointer;
+    font-size: 16px;
 }
 
-.star {
-    color: gray;
+.rating-close-button,
+.cancel-close-button {
+    background-color: #f44336;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 16px;
 }
 
-.star.selected {
-    color: gold;
+.rating-submit-button:hover,
+.cancel-submit-button:hover,
+.rating-close-button:hover,
+.cancel-close-button:hover {
+    background-color: #45a049;
 }
 
-.rating-modal .modal-content {
-    background-color: white;
-    padding: 20px;
-    text-align: center;
-    width: 300px;
-    margin: auto;
-}
-
-.modal-actions {
-    margin-top: 20px;
-}
-
-.rating-submit-button, .rating-close-button {
-    margin: 10px;
+/* Cancel modal specific styles */
+.cancel-reason-select {
+    width: 100%;
     padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
 }
+
+.cancel-reason-textarea {
+    width: 100%;
+    padding: 10px;
+    border-radius: 5px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+    min-height: 80px;
+}
+
+/* Navbar styling */
+.navbar {
+    background-color: #333;
+    padding: 10px 20px;
+    color: white;
+}
+
+.navbar h2 {
+    font-size: 24px;
+    color: white;
+}
+

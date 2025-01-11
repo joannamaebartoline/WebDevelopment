@@ -10,6 +10,8 @@ const Orders = () => {
     const [selectedOrderID, setSelectedOrderID] = useState(null);
     const [cancelReason, setCancelReason] = useState("");
     const [showCancelModal, setShowCancelModal] = useState(false);
+    const [showRatingModal, setShowRatingModal] = useState(false);
+    const [rating, setRating] = useState(0);
     const alertShown = useRef(false);
     const navigate = useNavigate();
 
@@ -38,23 +40,32 @@ const Orders = () => {
         }
     }, [user]);
 
-    const handleOrderReceived = (orderID) => {
-        axios.put(`http://localhost:8800/orders/${orderID}`, {
-            status: "Received"
-        })
-        .then((response) => {
-            setOrders((prevOrders) =>
-                prevOrders.map((order) =>
-                    order.orderID === orderID ? { ...order, status: "Received" } : order
-                )
-            );
-            alert("Order status updated to 'Received'.");
-        })
-        .catch((error) => {
-            console.error("Error updating order status:", error);
-        });
+    const openRatingModal = (orderID) => {
+        setSelectedOrderID(orderID);
+        setShowRatingModal(true);
     };
 
+    const closeRatingModal = () => {
+        setShowRatingModal(false);
+        setRating(0);
+    };
+
+    const submitRating = () => {
+        axios.put(`http://localhost:8800/orders/${selectedOrderID}`, {
+            status: "Received",
+            rating: rating
+        }).then(() => {
+            setOrders((prevOrders) =>
+                prevOrders.map((order) =>
+                    order.orderID === selectedOrderID ? { ...order, status: "Received" } : order
+                )
+            );
+            alert("Thank you for your feedback!");
+            closeRatingModal();
+        }).catch((error) => {
+            console.error("Error submitting rating:", error);
+        });
+    };
    
     const openCancelModal = (orderID) => {
         setSelectedOrderID(orderID);
@@ -90,6 +101,7 @@ const Orders = () => {
             console.error("Error canceling order:", error);
         });
     };
+    
 
     return (
         <div>
@@ -106,6 +118,8 @@ const Orders = () => {
                             <div className="order-items-container">
         {order.checkoutItems.map((item, index) => (
             <div key={index} className="order-item-card">
+                <img src={`http://localhost:8800${item.images}`} alt={item.title} />
+
                 <p className="order-item-title">{item.title}</p>
                 <p className="order-item-price">₱{item.price.toFixed(2)}</p>
                 <p className="order-item-quantity">Quantity: {item.quantity}</p>
@@ -116,7 +130,7 @@ const Orders = () => {
                             {order.status === "Delivered" && (
                                 <button
                                     className="order-received-button"
-                                    onClick={() => handleOrderReceived(order.orderID)}
+                                    onClick={() => openRatingModal(order.orderID)}
                                 >
                                     Order Received
                                 </button>
@@ -133,6 +147,27 @@ const Orders = () => {
                     ))
                 )}
             </div>
+            {showRatingModal && (
+                <div className="rating-modal">
+                    <div className="modal-content">
+                        <h2>Rate your order</h2>
+                        {[1, 2, 3, 4, 5].map((star) => (
+                            <span
+                                key={star}
+                                className={star <= rating ? "star-filled" : "star-empty"}
+                                onClick={() => setRating(star)}
+                                style={{ cursor: "pointer", fontSize: "24px",  color: star <= rating ? "gold" : "gray"}}
+                            >
+                                ★
+                            </span>
+                        ))}
+                        <div className="modal-actions">
+                            <button className="rating-submit-button" onClick={submitRating}>Submit</button>
+                            <button className="rating-close-button" onClick={closeRatingModal}>Close</button>
+                        </div>
+                    </div>
+                </div>
+            )}
             {showCancelModal && (
                 <div className="cancel-modal">
                     <div className="modal-content">

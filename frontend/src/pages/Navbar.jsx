@@ -62,23 +62,19 @@ const Navbar = ({ onSearch }) => {
 </button>
 
 
+ <button
+  className="nav-link"
+  onClick={() => navigate("/myorders")}style={{ background: 'none', border: 'none', padding: 0, color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}
+>
+  My Orders
+</button>
+<div className="searchbar">
             <input
                 type="text"
                 placeholder="Search products..."
                 onChange={handleSearchChange}
-                style={{
-                    padding: "5px 10px",
-                    border: "1px solid #ccc",
-                    borderRadius: "5px",
-                    width: "1000px",
-                }}
-            />
- <button
-  className="nav-link"
-  onClick={() => navigate("/myorders")}
->
-  My Orders
-</button>
+             
+            /></div>
 <div className="cart-icon-container" onClick={handleCartClick}>
                     <img src={cartIcon} alt="Cart" className="cart-icon" />
                 </div>
