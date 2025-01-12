@@ -14,6 +14,7 @@ const Home = () => {
     const [selectedPriceRange, setSelectedPriceRange] = useState(""); 
     const [categories, setCategories] = useState([]); 
     const [ratings, setRatings] = useState({});
+    const [selectedRating, setSelectedRating] = useState(""); 
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -141,7 +142,12 @@ const handleAddToCart = async (product, quantity) => {
         navigate("/checkout", { state: { checkoutItems: [checkoutProduct], totalAmount } });
     };
     
+    const filterByRating = (productID) => {
+        if (selectedRating === "") return true; 
     
+        const productRating = ratings[productID]?.averageRating || 0;
+        return Math.round(productRating) === parseInt(selectedRating);
+    };
     const filterByPriceRange = (price) => {
         if (!selectedPriceRange) return true; 
     
@@ -171,8 +177,9 @@ const handleAddToCart = async (product, quantity) => {
             : true;
     
         const isPriceMatch = filterByPriceRange(product.price);
+        const isRatingMatch = filterByRating(product.productID);
     
-        return isCategoryMatch && isPriceMatch;
+        return isCategoryMatch && isPriceMatch && isRatingMatch;
     });
     
 const isUserLoggedIn = localStorage.getItem("user");
@@ -227,6 +234,19 @@ const isUserLoggedIn = localStorage.getItem("user");
         <option value="500-1000">₱500 - ₱1000</option>
         <option value="1000-5000">₱1000 - ₱5000</option>
         <option value="5000plus">₱5000 and above</option>
+    </select>
+
+    <select
+        value={selectedRating}
+        onChange={(e) => setSelectedRating(e.target.value)}
+    >
+        <option value="">All Ratings</option>
+        <option value="5">5 Stars</option>
+        <option value="4">4 Stars</option>
+        <option value="3">3 Stars</option>
+        <option value="2">2 Stars</option>
+        <option value="1">1 Stars</option>
+        <option value="0">0 Stars</option>
     </select>
 </div>
 

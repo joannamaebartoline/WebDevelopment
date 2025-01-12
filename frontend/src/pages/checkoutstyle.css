@@ -1,67 +1,199 @@
+/* General Container Styling */
 .checkout-container {
-    max-width: 800px;
-    margin: 0 auto;
+    max-width: 900px;
+    margin: 30px auto;
     padding: 20px;
-    font-family: Arial, sans-serif;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    margin-top: 100px;
 }
 
+/* Title */
 .checkout-title {
     text-align: center;
-    color: #333;
+    color: #444;
+    font-size: 1.8em;
+    font-weight: bold;
+    margin-bottom: 20px;
+}
+
+/* User Info Section */
+.user-info h2 {
+    font-size: 1.5em;
+    color: #555;
+    margin-bottom: 10px;
+}
+
+.user-info p {
+    font-size: 1em;
+    margin: 5px 0;
+}
+
+/* Cart Items Table */
+.cart-items {
+    margin-top: 30px;
+}
+
+.cart-items h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #555;
 }
 
 .cart-items table {
     width: 100%;
     border-collapse: collapse;
-    margin-top: 20px;
+    margin-top: 10px;
+    font-size: 1em;
 }
 
-.cart-items th, .cart-items td {
+.cart-items th,
+.cart-items td {
     border: 1px solid #ddd;
-    padding: 10px;
+    padding: 12px 15px;
     text-align: center;
 }
 
-.total-amount {
-    text-align: right;
-    font-size: 1.2em;
-    margin-top: 10px;
+.cart-items th {
+    background-color: #f3f3f3;
+    color: #333;
+    font-weight: bold;
 }
 
-.payment-method, .optional-message {
-    margin-top: 20px;
+.cart-items td {
+    color: #555;
+}
+
+/* Total Amount */
+.total-amount {
+    text-align: right;
+    font-size: 1.3em;
+    font-weight: bold;
+    margin-top: 15px;
+    color: #444;
+}
+
+/* Payment Method */
+.payment-method {
+    margin-top: 30px;
+}
+
+.payment-method h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #555;
 }
 
 .payment-method label {
-    display: block;
+    display: flex;
+    align-items: center;
+    font-size: 1em;
     margin-bottom: 10px;
+    color: #444;
+}
+
+.payment-method input[type="radio"] {
+    margin-right: 10px;
+}
+
+/* Credit Card Details */
+.credit-card-details {
+    margin-top: 20px;
+    padding: 15px;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+}
+
+.credit-card-details h3 {
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.credit-card-details label {
+    font-size: 1em;
+    display: block;
+    margin-bottom: 5px;
+    color: #555;
 }
 
 .credit-card-details input {
-    display: block;
-    margin: 5px 0;
-    padding: 8px;
     width: 100%;
+    padding: 10px;
+    font-size: 1em;
     border: 1px solid #ccc;
     border-radius: 5px;
+    margin-bottom: 15px;
+}
+
+/* Optional Message */
+.optional-message {
+    margin-top: 30px;
+}
+
+.optional-message h2 {
+    font-size: 1.5em;
+    margin-bottom: 15px;
+    color: #555;
+}
+
+.optional-message textarea {
+    width: 100%;
+    min-height: 80px;
+    padding: 10px;
+    font-size: 1em;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    resize: vertical;
+}
+
+/* Place Order Button */
+.place-order {
+    margin-top: 30px;
+    text-align: center;
 }
 
 .place-order-button {
-    display: block;
     width: 100%;
-    padding: 10px;
+    padding: 15px;
+    font-size: 1.2em;
+    font-weight: bold;
     background-color: #28a745;
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 8px;
     cursor: pointer;
-    margin-top: 20px;
+    transition: background-color 0.3s ease;
 }
 
 .place-order-button:hover {
     background-color: #218838;
 }
 
-input[type="radio"] {
-    margin-right: 10px;
+/* Responsive Design */
+@media (max-width: 768px) {
+    .checkout-container {
+        padding: 15px;
+    }
+
+    .checkout-title {
+        font-size: 1.5em;
+    }
+
+    .cart-items th,
+    .cart-items td {
+        font-size: 0.9em;
+        padding: 10px;
+    }
+
+    .total-amount {
+        font-size: 1.1em;
+    }
+
+    .place-order-button {
+        font-size: 1em;
+    }
 }

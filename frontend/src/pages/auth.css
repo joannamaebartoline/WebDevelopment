@@ -1,23 +1,29 @@
-/* General Styling for both Forms */
+/* General Styling for Auth Forms */
 .auth-form {
     display: flex;
     flex-direction: column;
     justify-content: center;
     align-items: center;
-    padding: 20px;
+    padding: 30px;
     max-width: 400px;
     width: 100%;
-    margin: auto;
-    background-color: #fff;
-    border-radius: 8px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
-    transition: all 0.3s ease;
+    margin: 50px auto; /* Add spacing from the top */
+    background-color: #f9f9f9; /* Softer background color */
+    border-radius: 10px;
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.1); /* Slightly deeper shadow for modern look */
+    transition: all 0.3s ease-in-out;
+}
+
+.auth-form:hover {
+    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2); /* Add hover effect */
 }
 
 .auth-form h1 {
-    margin-bottom: 20px;
-    font-size: 24px;
-    color: #333;
+    margin-bottom: 25px;
+    font-size: 28px; /* Slightly larger font size for better visibility */
+    font-weight: bold;
+    color: #2c3e50; /* Deep gray-blue for better contrast */
+    text-align: center;
 }
 
 .auth-form form {
@@ -27,39 +33,83 @@
 }
 
 .auth-form input {
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
+    padding: 12px;
+    margin-bottom: 20px; /* Add more spacing for better visual separation */
+    border: 1px solid #ddd; /* Softer border color */
+    border-radius: 6px;
     font-size: 16px;
-    width: 100%;
+    color: #333;
+    background-color: #fff;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+}
+
+.auth-form input::placeholder {
+    color: #aaa; /* Lighter placeholder for better distinction */
 }
 
 .auth-form input:focus {
-    border-color: #4CAF50; /* Highlight border when focused */
+    border-color: #3498db; /* Blue focus border */
+    box-shadow: 0 0 5px rgba(52, 152, 219, 0.5); /* Subtle glow effect */
     outline: none;
 }
 
 .auth-form button {
-    padding: 12px;
+    padding: 14px;
     font-size: 16px;
-    background-color: #4CAF50; /* Green color */
+    font-weight: bold;
+    background-color: #3498db; /* Blue primary button */
     color: white;
     border: none;
-    border-radius: 5px;
+    border-radius: 6px;
     cursor: pointer;
-    transition: background-color 0.3s ease;
+    transition: background-color 0.3s ease, transform 0.2s ease;
+    width: 100%;
+    max-width: 200px;
+    margin: 0 auto; 
 }
 
 .auth-form button:hover {
-    background-color: #45a049; /* Darker green on hover */
+    background-color: #2980b9; /* Darker blue on hover */
+    transform: translateY(-2px); /* Subtle lift on hover */
+}
+
+.auth-form button:active {
+    background-color: #1f6a93; /* Even darker blue for active state */
+    transform: translateY(0); /* Reset lift effect */
+}
+
+.auth-form p {
+    margin-top: 15px;
+    font-size: 14px;
+    color: #666; /* Subtle text color */
+    text-align: center;
+}
+
+.auth-form p span {
+    color: #3498db; /* Link color */
+    font-weight: bold;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.auth-form p span:hover {
+    color: #2980b9; /* Darker link color on hover */
 }
 
 /* Responsive Styles */
 @media (max-width: 600px) {
     .auth-form {
-        padding: 15px;
-        max-width: 350px;
+        padding: 20px;
+        max-width: 90%;
+        margin: 20px auto; /* Adjust margin for smaller screens */
+    }
+
+    .auth-form h1 {
+        font-size: 24px; /* Slightly smaller heading on small screens */
+    }
+
+    .auth-form input,
+    .auth-form button {
+        font-size: 14px; /* Adjust input and button text size for small screens */
     }
 }
-

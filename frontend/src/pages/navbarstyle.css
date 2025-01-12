@@ -1,6 +1,6 @@
 /* General Navbar Styling */
 .navbar {
-    background-color: #333; /* Dark background color */
+    background-color: #333;
     padding: 10px 20px;
     display: flex;
     align-items: center;
@@ -18,66 +18,92 @@
     display: flex;
     align-items: center;
     justify-content: flex-start;
+    gap: 20px;
 }
 
-/* Navbar Button Styling (Home, My Orders, etc.) */
+/* Navbar Button Styling (Home, My Orders) */
 .nav-link {
+    margin-right: 15px;
     color: white;
     text-decoration: none;
     font-size: 16px;
     cursor: pointer;
-    background: none;
     border: none;
-    border-radius: 5px; /* Optional: Add slight rounding for better UI */
+    margin-right: 20px;
     transition: background-color 0.3s ease, color 0.3s ease;
+    white-space: nowrap;
+    margin-left: 15px;
+}
+.nav-link:last-child {
+    margin-right: 0; /* Avoid extra space on the last button */
+}
+.nav-link:hover {
+    background-color: transparent;
+    text-decoration: none;
 }
 
-.nav-link:hover {
-    text-decoration: none;
-    background-color: transparent; /* Highlight on hover */
+/* Search Bar */
+.searchbar{
+    margin-left: 800px;
+    margin-top: 10px;
+    margin-right: 10px;
+}
+.searchbar input[type="text"] {
+    width: 300px;
+    padding: 8px 15px;
+    border: 1px solid #ccc;
+    border-radius: 20px;
+    outline: none;
+    font-size: 14px;
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+    margin-left: 15px;
+}
+
+.searchbar input[type="text"]:focus {
+    border-color: #ff4500;
+    box-shadow: 0px 4px 8px rgba(255, 69, 0, 0.3);
+    background-color: #fef9f9;
+}
+
+.searchbar input[type="text"]::placeholder {
+    color: #aaa;
+    font-style: italic;
 }
 
 /* Cart Icon Styling */
 .cart-icon-container {
     cursor: pointer;
-    margin-right: 20px;
+    margin-right: -10px;
 }
 
 .cart-icon {
     width: 30px;
-    height: auto;
-    filter: brightness(0) invert(1); /* Make the icon white */
+    filter: brightness(0) invert(1);
     transition: transform 0.2s ease-in-out;
-    margin-left: 20px;
-    margin-top: 10px;
 }
 
 .cart-icon:hover {
-    transform: scale(1.1); /* Slight zoom on hover */
+    transform: scale(1.1);
 }
 
-/* Account Icon and Dropdown */
+/* Account Dropdown */
 .account-dropdown {
     position: relative;
 }
 
 .account-icon {
     width: 32px;
-    height: auto;
     cursor: pointer;
     filter: brightness(0) invert(1);
     transition: transform 0.2s ease-in-out;
-    vertical-align: middle;
-    display: inline-block;
     margin-left: 20px;
-    margin-top: 10px;
 }
 
 .account-icon:hover {
     transform: scale(1.1);
 }
 
-/* Dropdown Menu Styling */
+/* Dropdown Menu */
 .dropdown-menu {
     display: none;
     position: absolute;
@@ -98,12 +124,11 @@
 
 .dropdown-item {
     padding: 8px 12px;
-    cursor: pointer;
     color: black;
-    text-decoration: none;
     font-size: 14px;
-    display: block;
+    text-decoration: none;
     border-radius: 3px;
+    transition: background-color 0.2s ease;
 }
 
 .dropdown-item:hover {
@@ -113,37 +138,13 @@
 /* Login/Sign Up Links */
 .nav-link-ls {
     color: black;
-    text-decoration: none;
     font-size: 14px;
-    margin-right: 10px;
+    margin: 5px 0;
     display: block;
-    padding: 5px 0;
+    padding: 5px;
+    text-decoration: none;
 }
 
 .nav-link-ls:hover {
     text-decoration: underline;
-}
-
-.searchbar input[type="text"] {
-    width: 300px;
-    padding: 8px 15px;
-    border: 1px solid #ccc;
-    border-radius: 20px;
-    outline: none;
-    font-size: 14px;
-    transition: all 0.3s ease-in-out;
-    margin-left: 15px;
-    box-shadow: 0px 3px 6px rgba(0, 0, 0, 0.1);
-    margin-top: 5px;
-}
-
-.searchbar input[type="text"]:focus {
-    border-color: #ff4500;
-    box-shadow: 0px 4px 8px rgba(255, 69, 0, 0.3);
-    background-color: #fef9f9;
-}
-
-.searchbar input[type="text"]::placeholder {
-    color: #aaa;
-    font-style: italic;
 }

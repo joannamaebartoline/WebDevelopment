@@ -10,7 +10,7 @@ const Add = () => {
         price: "",
         images: "",
         categoryID: "",
-        stocl: "",
+        stock: "",
     });
     const [file, setFile] = useState(null);
     const [categories, setCategories] = useState([]); 

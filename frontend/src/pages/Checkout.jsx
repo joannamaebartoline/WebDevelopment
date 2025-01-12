@@ -12,6 +12,7 @@ const CheckoutPage = () => {
     const isLoggedIn = localStorage.getItem("user");
     const [setCheckoutItems] = useState(checkoutItems);
     const [paymentMethod, setPaymentMethod] = useState("cash-on-delivery");
+    const [selectedWallet, setSelectedWallet] = useState("");
     const [showCardForm, setShowCardForm] = useState(false);
     const [paymentDetails, setPaymentDetails] = useState({
         cardNumber: "",
@@ -19,7 +20,9 @@ const CheckoutPage = () => {
         cvv: "",
     });
     const [message, setMessage] = useState("");
-    
+    const handleWalletChange = (e) => {
+        setSelectedWallet(e.target.value);
+    };
 
     useEffect(() => {
         const storedUser = localStorage.getItem("user");
@@ -144,14 +147,28 @@ const CheckoutPage = () => {
                             Cash on Delivery
                         </label>
                         <label>
-                            <input
-                                type="radio"
-                                value="payment-center"
-                                checked={paymentMethod === "payment-center"}
-                                onChange={handlePaymentMethodChange}
-                            />
-                            Payment Center/E-Wallet (GCash, Maya)
-                        </label>
+            <input
+                type="radio"
+                value="e-wallet"
+                checked={paymentMethod === "e-wallet"}
+                onChange={handlePaymentMethodChange}
+            />
+            E-Wallet (GCash, Maya)
+        </label>
+        {paymentMethod === "e-wallet" && (
+    <div className="e-wallet-options">
+        <label htmlFor="wallet-select">Select Wallet:</label>
+        <select
+            id="wallet-select"
+            value={selectedWallet}
+            onChange={handleWalletChange}
+        >
+            
+            <option value="GCash">GCash</option>
+            <option value="Maya">Maya</option>
+        </select>
+    </div>
+)}
                         <label>
                             <input
                                 type="radio"

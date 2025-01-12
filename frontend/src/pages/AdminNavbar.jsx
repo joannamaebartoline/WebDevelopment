@@ -52,7 +52,6 @@ const AdminNavbar = () => {
                         <div className={`dropdown-menuadmin ${dropdownVisible ? "show" : ""}`}>
                             {user ? (
                                 <>
-                                    <p>Welcome, {user.username}</p>
                                     <button onClick={handleLogout}>Logout</button>
                                 </>
                             ) : (

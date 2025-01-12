@@ -538,11 +538,18 @@ app.get("/products", (req, res) => {
 // Delete product
 app.delete('/products/:id', (req, res) => {
     const q = "DELETE FROM products WHERE productID = ?";
-    db.query(q, [req.params.id], (err) => {
-        if (err) return res.status(500).json(err);
+    console.log("Delete Query: ID =", req.params.id);
+    db.query(q, [req.params.id], (err, result) => {
+        if (err) {
+            console.error("Delete Error:", err);
+            return res.status(500).json(err); 
+        }
+        console.log("Delete Success:", result);
         res.status(200).json("Product has been deleted.");
     });
 });
+
+
 
 // Example with Express.js
 app.get('/products/:id', (req, res) => {

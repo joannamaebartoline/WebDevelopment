@@ -37,13 +37,14 @@ const Products = () => {
         const confirmDelete = window.confirm("Are you sure you want to delete this product?");
         if (confirmDelete) {
             try {
+                console.log("Sending DELETE request for productID:", id); // Debugging line
                 await axios.delete(`http://localhost:8800/products/${id}`);
                 fetchAllProducts();
             } catch (err) {
                 console.log("Error deleting product:", err);
             }
         }
-    };
+    };    
 
     const getCategoryNameById = (categoryID) => {
         const category = categories.find((cat) => cat.categoryID === categoryID);

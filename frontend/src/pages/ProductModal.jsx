@@ -62,7 +62,7 @@ const navigate = useNavigate();
                 <span>₱{product.price}</span>
 
                 {/* Quantity Input */}
-                <div style={{ margin: "15px 0" }}>
+                <div className="modal-quantity" style={{ margin: "15px 0" }}>
                     <label style={{ marginRight: "10px" }}>Quantity:</label>
                     <input
                         type="number"
