@@ -1,7 +1,8 @@
 /* Hero Section */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 .hero-section {
     position: relative;
-    width: 105%;
+    width: 100%;
     height: 100vh;
     background-image: url('../assets/cosmetics3.png');
     background-size: cover;
@@ -15,7 +16,6 @@
     left: 0;
     width: 100%;
     height: 100%;
-    background: rgba(0, 0, 0, 0.2);
     display: flex;
     flex-direction: column;
     justify-content: center;
@@ -23,6 +23,7 @@
     text-align: center;
     color: white;
     padding: 0 20px;
+    margin-top: -70px;
 }
 
 .hero-overlay h1 {
@@ -40,15 +41,16 @@
 .hero-overlay button {
     padding: 10px 20px;
     font-size: 16px;
-    background-color: #ff4500;
-    color: white;
+    background-color: #e7e0e0;
+    color: #333333;
     border: none;
     cursor: pointer;
-    border-radius: 5px;
+    border-radius: 10px;
+    width: 300px;
 }
 
 .hero-overlay button:hover {
-    background-color: #e84300;
+    background-color: #E6A8D7;
 }
 /* General Styling */
 body {
@@ -61,13 +63,16 @@ body {
 .home-page {
     padding: 2rem;
     text-align: center;
-    margin-top: -40px;
+    margin-top: -60px;
+    font-family: montserrat;
+    
 }
 
 .home-page h1 {
     font-size: 2.5rem;
     margin-bottom: 2rem;
-    color: #333;
+    color: #333333 !important;
+    font-weight: 500;
 }
 
 /* Product Cards */
@@ -87,6 +92,11 @@ body {
     text-align: center;
     transition: box-shadow 0.3s ease;
 }
+.product-header {
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+}
 
 .product-card:hover {
     box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
@@ -100,19 +110,23 @@ body {
 }
 
 .product-card h2 {
-    font-size: 1.5rem;
+    font-size: 1.3rem;
     margin: 0.5rem 0;
     color: #333;
+    font-weight: 600;
 }
 
 .product-card span {
-    font-size: 1.2rem;
+    font-size: 1.1rem;
     font-weight: bold;
     color: green;
     margin: 0.5rem 0;
     display: block;
+    font-weight: 600;
 }
-
+.product-card button{
+    margin-bottom: 10px;
+}
 /* Product Rating */
 .product-rating {
     margin: 0.5rem 0;
@@ -124,6 +138,7 @@ body {
 .stars span {
     font-size: 1.2rem;
     margin: 0 2px;
+    
 }
 
 .stars .filled {
@@ -249,6 +264,7 @@ body {
     gap: 10px;
     margin-top: 80px;
     width: 500px;
+    margin-top: 120px;
 }
 
 /* Duplicate H1 Styles */
@@ -497,4 +513,80 @@ nav ul li a:hover {
     background-color: inherit; 
     color: inherit; 
     transition: none;
+}
+
+/* Responsive Design */
+@media (max-width: 1200px) {
+    .product-cards {
+        gap: 1rem; /* Reduce gap between product cards */
+    }
+
+    .product-card {
+        width: 220px; /* Adjust card size */
+    }
+
+    .hero-overlay h1 {
+        font-size: 28px; /* Smaller headline for hero section */
+    }
+
+    .hero-overlay p {
+        font-size: 16px; /* Adjust paragraph text size */
+    }
+
+    .hero-overlay button {
+        width: 250px; /* Adjust button width */
+    }
+}
+
+@media (max-width: 992px) {
+    .product-cards {
+        flex-direction: column; /* Stack product cards vertically */
+        align-items: center;
+    }
+
+    .product-card {
+        width: 90%; /* Allow cards to span most of the container */
+    }
+
+    .hero-overlay {
+        padding: 0 10px; /* Reduce padding for smaller screens */
+    }
+}
+
+@media (max-width: 768px) {
+    .hero-section {
+        height: auto; /* Allow hero section to adapt height */
+    }
+
+    .hero-overlay h1 {
+        font-size: 24px; /* Smaller font size for smaller screens */
+    }
+
+    .hero-overlay p {
+        font-size: 14px; /* Adjust paragraph font size */
+    }
+
+    .product-card img {
+        height: auto; /* Ensure images scale with screen size */
+    }
+}
+
+@media (max-width: 576px) {
+    .hero-overlay h1 {
+        font-size: 20px; /* Smaller font size for very small screens */
+    }
+
+    .hero-overlay button {
+        font-size: 14px; /* Adjust button font size */
+        width: 200px; /* Smaller button width */
+    }
+
+    .product-card {
+        width: 100%; /* Full width on very small screens */
+    }
+
+    .modal {
+        padding: 1rem; /* Reduce padding for modals */
+        max-width: 90%; /* Ensure modals fit on screen */
+    }
 }

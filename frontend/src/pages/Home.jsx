@@ -15,6 +15,8 @@ const Home = () => {
     const [categories, setCategories] = useState([]); 
     const [ratings, setRatings] = useState({});
     const [selectedRating, setSelectedRating] = useState(""); 
+    const [searchQuery, setSearchQuery] = useState("");
+
 
     useEffect(() => {
         const fetchProducts = async () => {
@@ -59,6 +61,9 @@ const Home = () => {
         }
     }, [products]);
     
+    const handleSearch = (query) => {
+        setSearchQuery(query.toLowerCase());
+    };
 
     const handleViewDetails = (product) => {
         setSelectedProduct(product); // Set the clicked product
@@ -72,6 +77,12 @@ const Home = () => {
 const navigate = useNavigate();
 
 const handleAddToCart = async (product, quantity) => {
+
+    if (product.stock <= 0) {
+        alert("This product is out of stock.");
+        return;
+    }
+
     const isLoggedIn = localStorage.getItem("user");
     if (!isLoggedIn) {
         alert("Please log in to add items to the cart.");
@@ -114,11 +125,14 @@ const handleAddToCart = async (product, quantity) => {
         alert("Failed to add product to cart. Please try again.");
     }
 };
-
-
-
     
     const handleBuyNow = (product, quantity = 1) => {
+
+        if (product.stock <= 0) {
+            alert("This product is out of stock.");
+            return;
+        }
+
         const isLoggedIn = localStorage.getItem("user");
         if (!isLoggedIn) {
             alert("Please log in to proceed to checkout.");
@@ -178,14 +192,17 @@ const handleAddToCart = async (product, quantity) => {
     
         const isPriceMatch = filterByPriceRange(product.price);
         const isRatingMatch = filterByRating(product.productID);
+        const isSearchMatch =  product.title.toLowerCase().includes(searchQuery) ||
+        product.description.toLowerCase().includes(searchQuery) ||
+        product.categoryName.toLowerCase().includes(searchQuery);
     
-        return isCategoryMatch && isPriceMatch && isRatingMatch;
+        return isCategoryMatch && isPriceMatch && isRatingMatch && isSearchMatch;
     });
     
 const isUserLoggedIn = localStorage.getItem("user");
     return (
         <>
-            <Navbar />
+            <Navbar onSearch={handleSearch} />
             
             {/* Hero Section */}
             {!isUserLoggedIn && (
@@ -194,7 +211,7 @@ const isUserLoggedIn = localStorage.getItem("user");
                         <h1>Shop the Best Beauty Products</h1>
                         <p>Discover your perfect products for face, body, and hair.</p>
 
-                        <button
+                        <button 
                             onClick={() => {
                                 const section = document.getElementById("home-cont");
                                 if (section) {
@@ -252,7 +269,7 @@ const isUserLoggedIn = localStorage.getItem("user");
 
 
             <div className="home-page">
-                <h1>Our Products</h1>
+                <h1>Products</h1>
                 <div id="home-cont" className="home-content">
                 <div className="product-cards">
     {filteredProducts.map((product) => (
@@ -261,13 +278,15 @@ const isUserLoggedIn = localStorage.getItem("user");
                 src={`http://localhost:8800${product.images}`}
                 alt={product.title}
             />
+            <div className="product-header">
             <h2>{product.title}</h2>
             <span>₱{product.price}</span>
+            
 
             {ratings[product.productID] ? (
                 <p>
                     ⭐ {ratings[product.productID].averageRating} 
-                    ({ratings[product.productID].totalRatings} reviews)
+                  
                 </p>
             ) : (
                 <p>No ratings yet</p>
@@ -296,8 +315,9 @@ const isUserLoggedIn = localStorage.getItem("user");
                     onClick={() => handleBuyNow(product, 1)}
                 >
                     Buy Now
-                </button>
+                </button></div>
             </div>
+            
         </div>
     ))}
 </div>

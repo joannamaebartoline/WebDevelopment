@@ -93,7 +93,7 @@ const Products = () => {
                     <h1>Products</h1>
                     
                     {/* Filters Section */}
-                    <div className="filters">
+                    <div className="filters-product">
                         <select
                             onChange={(e) => {
                                 setSelectedCategory(e.target.value);
@@ -143,7 +143,7 @@ const Products = () => {
                     </div>
                     
                     <Link to="/add" className="add-container">
-                        <button>Add New Product</button>
+                        <button className="add-new-btn">Add New Product</button>
                     </Link>
                 </div>
             </div>

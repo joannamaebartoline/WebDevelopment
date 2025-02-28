@@ -72,7 +72,7 @@ const Cart = () => {
             setCartItems(updatedCart);
             localStorage.setItem(`cart_${userID}`, JSON.stringify(updatedCart));
     
-            alert("Cart updated successfully!");
+           
         } catch (err) {
             console.error("Error updating cart:", err);
             alert("Failed to update cart. Please try again.");
@@ -165,7 +165,7 @@ const Cart = () => {
         <div>
             <Navbar />
             <div className="cart-container">
-                <h1 className="cart-title">Your Cart</h1>
+                <h1 className="cart-title">Cart</h1>
                 {cartItems.length > 0 ? (
                     <>
                         <div>

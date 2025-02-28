@@ -25,7 +25,7 @@ const Signup = () => {
             navigate("/login"); // Redirect to login page
         } catch (err) {
             console.error("Error during signup:", err.response ? err.response.data : err.message);
-            alert("Signup failed. Please try again.");
+            alert(err.response ? err.response.data : "Signup failed. Please try again.");
         }
     };
     

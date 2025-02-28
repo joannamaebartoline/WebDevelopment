@@ -13,6 +13,7 @@ const Orders = () => {
     const [showRatingModal, setShowRatingModal] = useState(false);
     const [rating, setRating] = useState(0);
     const [selectedProductID, setSelectedProductID] = useState(null);
+    const [selectedStatus, setSelectedStatus] = useState("All");
     const [comment, setComment] = useState("");
     const alertShown = useRef(false);
     const navigate = useNavigate();
@@ -49,11 +50,43 @@ const Orders = () => {
         setShowRatingModal(true);
     };
 
+
+    const filteredOrders =
+    selectedStatus === "All"
+        ? orders
+        : orders.filter((order) => order.status === selectedStatus);
+
     const closeRatingModal = () => {
         setShowRatingModal(false);
         setRating(0);
     };
 
+    const handleOrderReceived = (orderID, productID) => {
+        const confirmRating = window.confirm("Would you like to provide a rating for this product?");
+        if (confirmRating) {
+            openRatingModal(orderID, productID); // Use the function here
+        } else {
+            axios.put(`http://localhost:8800/orders/${orderID}`, {
+                status: "Received",
+                ratingGiven: false
+            })
+            .then((response) => {
+                setOrders((prevOrders) =>
+                    prevOrders.map((order) =>
+                        order.orderID === orderID
+                            ? { ...order, status: response.data.order.status, ratingGiven: false }
+                            : order
+                    )
+                );
+                alert("Order marked as received.");
+            })
+            .catch((error) => {
+                console.error("Error updating order status:", error);
+                alert("Failed to update order status. Please try again.");
+            });
+        }
+    };
+    
     const submitRating = () => {
         axios.post("http://localhost:8800/ratings", {
             productID: selectedProductID, 
@@ -64,14 +97,15 @@ const Orders = () => {
         .then(() => {
             // Update the order status to "Received" and remove the "Order Received" button
             axios.put(`http://localhost:8800/orders/${selectedOrderID}`, {
-                status: "Received" // Update status to "Received"
+                status: "Received", // Update status to "Received"
+                ratingGiven: true
             })
             .then((response) => {
                 // Directly update the order status in the local state with the updated order data
                 setOrders((prevOrders) =>
                     prevOrders.map((order) =>
                         order.orderID === selectedOrderID
-                            ? { ...order, status: response.data.order.status }  // Use the updated status from the backend response
+                            ? { ...order, ratingGiven: true, status: "Received" }  // Use the updated status from the backend response
                             : order
                     )
                 );
@@ -125,44 +159,70 @@ const Orders = () => {
         });
     };
     
-
     return (
         <div>
             <Navbar />
             <div className="orders-container">
-                <h1>Your Orders</h1>
-                {orders.length === 0 ? (
-                    <p>You have no orders yet.</p>
+                <h1>Orders</h1>
+                <div className="filter-container">
+                    <label htmlFor="status-filter">Filter by Status:</label>
+                    <select
+                        id="status-filter"
+                        value={selectedStatus}
+                        onChange={(e) => setSelectedStatus(e.target.value)}
+                    >
+                        <option value="All">All</option>
+                        <option value="Pending">Pending</option>
+                        <option value="Delivered">Delivered</option>
+                        <option value="Received">Received</option>
+                        <option value="Cancelled">Cancelled</option>
+                    </select>
+                </div>
+                {filteredOrders.length === 0 ? (
+                    <p>No orders found for the selected status.</p>
                 ) : (
-                    orders.map((order) => (
+                    filteredOrders.map((order) => (
                         <div key={order.orderID} className="order-details">
-                            <p><strong>Status:</strong> {order.status}</p>
+                            <p>
+                                <strong>Status:</strong> {order.status}
+                            </p>
                             <h3>Items:</h3>
                             <div className="order-items-container">
-                            {order.checkoutItems.map((item, index) => (
-    <div key={index} className="order-item-card">
-        <img src={`http://localhost:8800${item.images}`} alt={item.title} />
-
-        <p className="order-item-title">{item.title}</p>
-        <p className="order-item-price">
-            ₱{(item.price && !isNaN(item.price)) ? item.price.toFixed(2) : "0.00"}
-        </p>
-        <p className="order-item-quantity">Quantity: {item.quantity}</p>
-    </div>
-))}
-
-    </div>
-    <p><strong>Total Amount:</strong> ₱{(order.totalAmount && !isNaN(order.totalAmount)) ? order.totalAmount.toFixed(2) : "0.00"}</p>
-
-                            {order.status === "Delivered" && order.checkoutItems.map((item) => (
+                                {order.checkoutItems.map((item, index) => (
+                                    <div key={index} className="order-item-card">
+                                        <img
+                                            src={`http://localhost:8800${item.images}`}
+                                            alt={item.title}
+                                        />
+                                        <p className="order-item-title">{item.title}</p>
+                                        <p className="order-item-price">
+                                            ₱
+                                            {item.price && !isNaN(item.price)
+                                                ? item.price.toFixed(2)
+                                                : "0.00"}
+                                        </p>
+                                        <p className="order-item-quantity">
+                                            Quantity: {item.quantity}
+                                        </p>
+                                    </div>
+                                ))}
+                            </div>
+                            <p>
+                                <strong>Total Amount:</strong> ₱
+                                {order.totalAmount && !isNaN(order.totalAmount)
+                                    ? order.totalAmount.toFixed(2)
+                                    : "0.00"}
+                            </p>
+                            {order.status === "Delivered" && (
     <button
-        key={item.productID}  // Make sure to set a unique key for the button
         className="order-received-button"
-        onClick={() => openRatingModal(order.orderID, item.productID)}  // pass both orderID and productID
+        onClick={() =>
+            handleOrderReceived(order.orderID, order.checkoutItems[0]?.productID)
+        }
     >
         Order Received
     </button>
-))}
+)}
 
                             {order.status === "Pending" && (
                                 <button
@@ -180,24 +240,35 @@ const Orders = () => {
                 <div className="rating-modal">
                     <div className="modal-content">
                         <h2>Rate your order</h2>
-                        {[1, 2, 3, 4, 5].map((star) => (
-                            <span
-                                key={star}
-                                className={star <= rating ? "star-filled" : "star-empty"}
-                                onClick={() => setRating(star)}
-                                style={{ cursor: "pointer", fontSize: "24px",  color: star <= rating ? "gold" : "gray"}}
-                            >
-                                ★
-                            </span>
-                        ))}
-                         <textarea
+                        <div className="star-container">
+                            {[1, 2, 3, 4, 5].map((star) => (
+                                <span
+                                    key={star}
+                                    className={star <= rating ? "star-filled" : "star-empty"}
+                                    onClick={() => setRating(star)}
+                                    style={{
+                                        cursor: "pointer",
+                                        fontSize: "24px",
+                                        color: star <= rating ? "gold" : "gray",
+                                    }}
+                                >
+                                    ★
+                                </span>
+                            ))}
+                        </div>
+                        <textarea
+                            className="comment"
                             placeholder="Leave a comment (optional)"
                             value={comment}
-                            onChange={(e) => setComment(e.target.value)}  
+                            onChange={(e) => setComment(e.target.value)}
                         />
                         <div className="modal-actions">
-                            <button className="rating-submit-button" onClick={submitRating}>Submit</button>
-                            <button className="rating-close-button" onClick={closeRatingModal}>Close</button>
+                            <button className="rating-submit-button" onClick={submitRating}>
+                                Submit
+                            </button>
+                            <button className="rating-close-button" onClick={closeRatingModal}>
+                                Close
+                            </button>
                         </div>
                     </div>
                 </div>
@@ -213,8 +284,12 @@ const Orders = () => {
                         >
                             <option value="">Select a reason</option>
                             <option value="Changed my mind">Changed my mind</option>
-                            <option value="Found a better price elsewhere">Found a better price elsewhere</option>
-                            <option value="Delivery is taking too long">Delivery is taking too long</option>
+                            <option value="Found a better price elsewhere">
+                                Found a better price elsewhere
+                            </option>
+                            <option value="Delivery is taking too long">
+                                Delivery is taking too long
+                            </option>
                             <option value="Ordered by mistake">Ordered by mistake</option>
                             <option value="Others">Others</option>
                         </select>

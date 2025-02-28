@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import axios from "axios";
 import "./allordersstyle.css";
-
+import AdminNavbar from "./AdminNavbar"; 
 
 const AllOrders = () => {
     const [orders, setOrders] = useState([]);
@@ -57,7 +57,8 @@ const AllOrders = () => {
     const groupedOrders = groupOrdersByStatus(orders);
 
     return (
-        
+        <div>
+        <AdminNavbar />
         <div className="all-orders-container">
             
             <h1>All Orders</h1>
@@ -75,6 +76,7 @@ const AllOrders = () => {
                                     <p><strong>User Address:</strong> {order.userAddress}</p>
                                     <p><strong>Payment Method:</strong> {order.paymentMethod}</p>
                                     <p><strong>Status:</strong> {order.status}</p>
+                                 
                                     {order.status !== "Received" && (
                                         <select 
                                             onChange={(e) => handleUpdateStatus(order.orderID, e.target.value)} 
@@ -109,6 +111,7 @@ const AllOrders = () => {
                     )}
                 </div>
              ))}
+        </div>
         </div>
     );
 };

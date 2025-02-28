@@ -7,8 +7,6 @@ import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import fs from 'fs';
 
-
-
 const app = express();
 
 // Database connection
@@ -355,14 +353,25 @@ app.post('/signup', async (req, res) => {
         return res.status(400).json("All fields are required.");
     }
 
-    // Check if the email already exists
-    db.query("SELECT * FROM customers WHERE email = ?", [email], async (err, result) => {
-        if (err) return res.status(500).json("Error checking email.");
+    const phoneRegex = /^[0-9]{11}$/;
+    if (!phoneRegex.test(phone_number)) {
+        return res.status(400).json("Phone number must be exactly 11 digits.");
+    }
+
+    // Check if the email and phone number already exists
+    db.query("SELECT * FROM customers WHERE email = ? OR phone_number = ?", [email, phone_number], async (err, result) => {
+        if (err) return res.status(500).json("Error checking email and phone number.");
 
         if (result.length > 0) {
-            return res.status(400).json("Email already exists.");
+          
+            if (result[0].email === email) {
+                return res.status(400).json("Email already exists.");
+            }
+           
+            if (result[0].phone_number === phone_number) {
+                return res.status(400).json("Phone number already exists.");
+            }
         }
-
         // Hash the password
         const hashedPassword = await bcrypt.hash(password, 10);
 

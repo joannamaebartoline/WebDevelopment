@@ -1,18 +1,22 @@
 /* General styles for the admin navbar */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:wght@100..900&display=swap");
+
 .admin-navbar {
-    background-color: #333; /* Dark background for the navbar */
-    color: #fff; /* White text */
-    padding: 10px 20px;
-    display: flex; /* Flexbox layout */
-    justify-content: space-between; /* Space out items horizontally */
-    align-items: center; /* Center items vertically */
+    background-color: #f7ceed; 
+    color: #fff; 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    font-family: 'Montserrat', sans-serif;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Added subtle shadow for better contrast */
 }
 
 /* Container for the navigation items */
 .nav-container {
-    display: flex; /* Use flexbox for alignment */
-    align-items: center; /* Center items vertically */
-    gap: 15px; /* Add spacing between items */
+    display: flex; 
+    align-items: center; 
+    gap: 20px; /* Increased spacing for better visibility */
+    white-space: nowrap;
 }
 
 /* Styles for account dropdown */
@@ -23,97 +27,133 @@
 
 /* Account icon styling */
 .account-iconadmin {
-    width: 32px;
-    height: 32px;
-    border-radius: 50%; /* Circular profile image */
-    filter: brightness(0) invert(1);
-    margin-left: 1120px;
+    width: 40px; 
+    height: 40px;
+    border-radius: 50%; 
+    transition: transform 0.3s ease;
+    margin-left: 1100px;
+}
+
+.account-iconadmin:hover {
+    transform: scale(1.1); /* Slight hover effect for better interaction */
 }
 
 /* Dropdown menu */
 .dropdown-menuadmin {
     position: absolute;
-    top: 50px;
+    top: 100%;
     right: 0;
-    background-color: #444; /* Dark background for dropdown */
-    border-radius: 5px; /* Rounded corners */
-    padding: 10px;
-    display: none; /* Hidden by default */
-    width: 150px;
-    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.3); /* Add a subtle shadow */
+    background-color: #444; 
+    border-radius: 8px;
+    padding: 12px;
+    display: none;
+    width: 180px;
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3); 
+    z-index: 1000;
 }
 
-/* Show dropdown when the class is active */
+/* Show dropdown when active */
 .dropdown-menuadmin.show {
-    display: block; /* Make dropdown visible */
+    display: block;
 }
 
 /* Dropdown item styling */
 .dropdown-itemadmin {
     color: #fff;
-    text-decoration: none; /* Remove underline */
-    padding: 5px 10px;
+    text-decoration: none; 
+    padding: 8px 12px;
     display: block;
+    border-radius: 5px;
     transition: background-color 0.3s ease;
 }
 
 .dropdown-itemadmin:hover {
-    background-color: #555; /* Slightly lighter background on hover */
+    background-color: #555; 
 }
 
 /* Welcome message */
 .dropdown-menuadmin p {
     color: #fff;
-    margin: 5px 0;
+    margin: 8px 0;
     font-size: 14px;
 }
 
 /* Logout button inside dropdown */
 .dropdown-menuadmin button {
-    background-color: transparent;
-    color: #fff;
-    border: 1px solid #fff; /* Add a subtle border */
-    padding: 5px 10px;
+    background-color: #F45D22; 
+    color: white;
+    border: none;
+    padding: 8px 12px;
     cursor: pointer;
     font-size: 14px;
-    border-radius: 3px;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
 }
 
 .dropdown-menuadmin button:hover {
-    background-color: #555;
-    color: #fff;
+    background-color: #E04015;
 }
 
-/* Buttons inside the navbar */
+/* Navbar buttons */
 .nav-buttonadmin {
     background-color: transparent;
-    color: #fff;
+    color: #333333;
     border: none;
     font-size: 16px;
     padding: 10px;
     cursor: pointer;
-    transition: background-color 0.3s ease, color 0.3s ease;
+    border-radius: 8px;
+    transition: background-color 0.3s ease;
+    font-family: montserrat;
 }
 
 .nav-buttonadmin:hover {
-    background-color: #555; /* Add hover effect */
-    color: #fff; /* Keep text white */
+    background-color: transparent;
 }
 
 /* Links inside buttons */
 .nav-buttonadmin a {
-    text-decoration: none; /* Remove underline from links */
-    color: inherit; /* Inherit text color */
-    font-size: inherit; /* Inherit font size */
+    text-decoration: none; 
+    color: inherit; 
+    font-size: inherit; 
 }
 
-/* Ensure links fill the button area */
 .nav-buttonadmin a:hover {
     text-decoration: none;
 }
 
-/* Add spacing for mobile responsiveness */
-.nav-container > div {
-    margin: 0;
+/* Logo styling */
+.logo-admin {
+    height: 90px; 
+    width: 120px;
+    transition: filter 0.3s ease;
+    margin-bottom: 10px;
+    margin-left: 10px;
+}
+
+.logo:hover {
+    filter: brightness(1.2);
+}
+
+/* Responsive Design Adjustments */
+@media (max-width: 768px) {
+    .admin-navbar {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .nav-container {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 10px;
+    }
+
+    .account-iconadmin {
+        margin-left: 0;
+    }
+
+    .dropdown-menuadmin {
+        position: static;
+        width: 100%;
+    }
 }

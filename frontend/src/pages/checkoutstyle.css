@@ -131,24 +131,36 @@
 
 /* Optional Message */
 .optional-message {
-    margin-top: 30px;
+    margin-top: 35px;
+    
+    font-family: Arial, sans-serif;
 }
 
 .optional-message h2 {
-    font-size: 1.5em;
-    margin-bottom: 15px;
-    color: #555;
+    font-size: 1.1em;
+    color: #555; 
+    margin-bottom: 10px;
+    margin-left: 10px;
 }
 
 .optional-message textarea {
     width: 100%;
-    min-height: 80px;
     padding: 10px;
-    font-size: 1em;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    resize: vertical;
+    border: 1px solid #ffb6c1; 
+    border-radius: 8px;
+    font-size: 1rem;
+    resize: vertical; /* Allows vertical resizing only */
+    box-sizing: border-box; /* Prevents padding from affecting width */
+    background-color: #fff;
+    margin-top: 5px;
 }
+
+.optional-message textarea:focus {
+    outline: none;
+    border-color: #f45d22; /* Orange-pink focus color */
+    box-shadow: 0 0 8px rgba(244, 93, 34, 0.5);
+}
+
 
 /* Place Order Button */
 .place-order {

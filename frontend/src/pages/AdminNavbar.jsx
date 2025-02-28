@@ -1,12 +1,15 @@
 import React, {useState, useEffect} from "react";
 import { Link } from "react-router-dom";
 import accountIcon from "../assets/account-icon.png";
+import { useNavigate } from "react-router-dom";
 import "./adminnavbar.css"; // Import the CSS file for Navbar styling
+import logo from "../assets/logo4.png";
 
 
 const AdminNavbar = () => {
     const [user, setUser] = useState(null);
     const [dropdownVisible, setDropdownVisible] = useState(false);
+    const navigate = useNavigate();
 
     useEffect(() => {
         const storedUser = JSON.parse(localStorage.getItem("user"));
@@ -30,6 +33,16 @@ const AdminNavbar = () => {
             <nav className="admin-navbar">
                 {/* Replace ul with div */}
                 <div className="nav-container">
+
+                     <div className="logo-container">
+                                        <img
+                                            src={logo}
+                                            alt="Logo"
+                                            className="logo-admin"
+                                            onClick={() => navigate("/customer")}
+                                            style={{ cursor: "pointer" }} // Optional: Makes the logo clickable
+                                        />
+                                    </div>
                     {/* Replace li with div */}
                     
                     <div>
@@ -39,7 +52,7 @@ const AdminNavbar = () => {
                     </div>
                     <div>
                         <button className="nav-buttonadmin">
-                            <Link to="/all-orders " style={{ color: "white", textDecoration: "none" }}>All Orders</Link>
+                            <Link to="/all-orders " style={{ textDecoration: "none" }}>All Orders</Link>
                         </button>
                     </div>
                     <div className="account-dropdownadmin">

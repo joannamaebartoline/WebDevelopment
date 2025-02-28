@@ -1,17 +1,19 @@
 /* General Navbar Styling */
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100..900;1,100..900&display=swap");
 .navbar {
-    background-color: #333;
+    background-color: #f7ceed !important;
     padding: 10px 20px;
     display: flex;
     align-items: center;
     justify-content: space-between;
-    color: white;
+    color: #333333 !important;
     position: fixed;
     top: 0;
     left: 0;
     width: 100%;
     z-index: 1000;
     box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    height: 70px;
 }
 
 .navbar-container {
@@ -32,7 +34,9 @@
     margin-right: 20px;
     transition: background-color 0.3s ease, color 0.3s ease;
     white-space: nowrap;
-    margin-left: 15px;
+    margin-left: -10px;
+    font-family: montserrat;
+    
 }
 .nav-link:last-child {
     margin-right: 0; /* Avoid extra space on the last button */
@@ -44,7 +48,7 @@
 
 /* Search Bar */
 .searchbar{
-    margin-left: 800px;
+    margin-left: 700px;
     margin-top: 10px;
     margin-right: 10px;
 }
@@ -60,8 +64,8 @@
 }
 
 .searchbar input[type="text"]:focus {
-    border-color: #ff4500;
-    box-shadow: 0px 4px 8px rgba(255, 69, 0, 0.3);
+    border-color: #d866bc;
+    box-shadow: 0px 4px 8px rgba(215, 144, 200, 0.3);
     background-color: #fef9f9;
 }
 
@@ -78,7 +82,6 @@
 
 .cart-icon {
     width: 30px;
-    filter: brightness(0) invert(1);
     transition: transform 0.2s ease-in-out;
 }
 
@@ -94,7 +97,6 @@
 .account-icon {
     width: 32px;
     cursor: pointer;
-    filter: brightness(0) invert(1);
     transition: transform 0.2s ease-in-out;
     margin-left: 20px;
 }
@@ -147,4 +149,97 @@
 
 .nav-link-ls:hover {
     text-decoration: underline;
+}
+
+
+.logo {
+    height: 90px; /* Adjust size as needed */
+    width: 120px;
+    transition: filter 0.3s ease;
+    margin-bottom: 18px;
+}
+
+@media (max-width: 992px) {
+    .navbar {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 10px;
+    }
+
+    .navbar-container {
+        flex-direction: column;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .nav-link {
+        margin-left: 0;
+        font-size: 14px;
+    }
+
+    .searchbar {
+        margin-left: 0;
+        margin-top: 10px;
+    }
+
+    .searchbar input[type="text"] {
+        width: 250px;
+    }
+
+    .cart-icon, .account-icon {
+        width: 28px;
+    }
+}
+
+@media (max-width: 768px) {
+    .searchbar input[type="text"] {
+        width: 200px;
+    }
+
+    .navbar {
+        padding: 5px 10px;
+    }
+
+    .navbar-container {
+        gap: 5px;
+    }
+
+    .dropdown-menu {
+        top: 40px;
+    }
+
+    .logo {
+        height: 100px;
+        width: 100px;
+    }
+}
+
+@media (max-width: 576px) {
+    .navbar {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .navbar-container {
+        flex-direction: column;
+        align-items: center;
+    }
+
+    .searchbar input[type="text"] {
+        width: 90%;
+    }
+
+    .nav-link {
+        font-size: 12px;
+        margin: 5px 0;
+    }
+
+    .cart-icon, .account-icon {
+        width: 24px;
+    }
+
+    .logo {
+        height: 80px;
+        width: 80px;
+    }
 }

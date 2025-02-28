@@ -3,6 +3,7 @@ import { Link, useNavigate } from "react-router-dom";
 import cartIcon from "../assets/cart-icon.png";
 import accountIcon from "../assets/account-icon.png"; 
 import "./navbarstyle.css";
+import logo from "../assets/logo4.png";
 const Navbar = ({ onSearch }) => {
 
     const [user, setUser] = useState(null);
@@ -27,10 +28,11 @@ const Navbar = ({ onSearch }) => {
     };
     
     const handleSearchChange = (e) => {
+        const query = e.target.value.toLowerCase();
         if (onSearch) {
-            onSearch(e.target.value); // Update the search query
+            onSearch(query); 
         }
-    };
+    };    
 
     const toggleDropdown = () => {
         setDropdownVisible(!dropdownVisible); // Toggle the dropdown visibility
@@ -50,12 +52,21 @@ const Navbar = ({ onSearch }) => {
     return (
         <nav className="navbar">
         <div className="navbar-container">
+        <div className="logo-container">
+                    <img
+                        src={logo}
+                        alt="Logo"
+                        className="logo"
+                        onClick={() => navigate("/customer")}
+                        style={{ cursor: "pointer" }} // Optional: Makes the logo clickable
+                    />
+                </div>
         <button 
-  className="nav-link" 
-  onClick={(e) => {
-    e.preventDefault();  
-    window.location.replace("/customer");  
-  }}
+        className="nav-link" 
+        onClick={(e) => {
+            e.preventDefault();  
+            window.location.replace("/customer");  
+        }}
   style={{ background: 'none', border: 'none', padding: 0, color: 'inherit', textDecoration: 'none', cursor: 'pointer' }}
 >
   Home
@@ -68,16 +79,16 @@ const Navbar = ({ onSearch }) => {
 >
   My Orders
 </button>
-<div className="searchbar">
-            <input
-                type="text"
-                placeholder="Search products..."
-                onChange={handleSearchChange}
-             
-            /></div>
-<div className="cart-icon-container" onClick={handleCartClick}>
-                    <img src={cartIcon} alt="Cart" className="cart-icon" />
-                </div>
+            <div className="searchbar">
+                <input
+                    type="text"
+                    placeholder="Search products..."
+                    onChange={handleSearchChange}
+                />
+            </div>
+                <div className="cart-icon-container" onClick={handleCartClick}>
+                                    <img src={cartIcon} alt="Cart" className="cart-icon" />
+                                </div>
 
                 <div className="account-dropdown">
                     <img
@@ -93,7 +104,9 @@ const Navbar = ({ onSearch }) => {
                                 <Link to="/signup" className="nav-link-ls">Sign Up</Link>
                             </>
                         ) : (
+                    
                             <button onClick={handleLogout} className="dropdown-item">Logout</button>
+                        
                         )}
                     </div>
                 </div>
